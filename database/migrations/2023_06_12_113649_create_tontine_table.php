@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cotisations', function (Blueprint $table) {
+        Schema::create('tontine', function (Blueprint $table) {
             $table->id();
-            $table->string('libelle');
-            $table->integer('nbPartMax');
-            $table->decimal('penaliteDefaillanceBenef', 15,2);
-            $table->decimal('penalitesDefaillanceNonBenef', 15,2);
-            $table->decimal('miseAprix');
+            $table->string('nom');
+            $table->date('dateDebut');
+            $table->date('dateFin');
+            $table->text('onservation');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cotisations');
+        Schema::dropIfExists('tontine');
     }
 };

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('prenom');
-            $table->integer('anneeNais');
-            $table->integer('anneeEntree');
+            $table->date('anneeNais');
+            $table->date('anneeEntree');
             $table->integer('nbDeFemme');
             $table->string('login');
             $table->string('password');
@@ -26,8 +26,7 @@ return new class extends Migration
             $table->string('telephone1');
             $table->string('telephone2')->nullable();
             $table->string('email')->unique();
-            $table->boolean('actif')->default(True);
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

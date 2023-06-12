@@ -77,7 +77,7 @@ class User extends Authenticatable
 
     public function roles(){
 
-        return $this->belongsToMany(Role::class, "user_role", "user_id", "role_id");
+        return $this->belongsToMany(Role::class, "role_users", "user_id", "role_id")->withPivot("dateDebut", "dateFinPrevue", "dateFinEffective");
     }
 
 
@@ -105,6 +105,15 @@ class User extends Authenticatable
     public function aide_deces_membres(){
 
         return $this->belongsToMany(AideDecesMembre::class, "designe_pour_voyage","user_id", "aide_deces_membre_id");
+    }
+
+    public function hasRole($role){
+        return $this->roles()->where("nom", $role)->first() !==null;
+    }
+
+    public function hasAnyRoles($role){
+
+        return $this->roles()->whereIn("nom", $role)->first() !==null;
     }
 
 }

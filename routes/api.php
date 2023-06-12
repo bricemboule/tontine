@@ -1,6 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MembreController;
+use App\Models\Permisssion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,17 +19,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/creation', [UserController::class, 'Register']);
-Route::post('login', [UserController::class, 'login']);
-Route::post('logout', [UserController::class, 'logout']);
+Route::post('/register', [UserController::class, 'Register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout']);
+Route::apiResource('roles', RoleController::class);
+Route::apiResource('permissions', PermissionController::class);
+Route::apiResource('membres', MembreController::class);
+Route::apiResource('users', UserController::class);
 
 Route::middleware('auth->sanctum')->group(function(){
 
+    //Retourne l'utilisateur connecter
     Route::get('/user', function(Request $request){
-
         return $request->user();
     });
+
+  
 });
+
 
 
 

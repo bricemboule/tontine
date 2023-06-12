@@ -11,6 +11,6 @@ class Role extends Model
 
     public function users(){
 
-        return $this->belongsToMany(User::class, "user_role", "role_id", "user_id");
+        return $this->belongsToMany(Role::class, "role_users", "role_id", "user_id")->withPivot("dateDebut", "dateFinPrevue", "dateFinEffective");
     }
 }

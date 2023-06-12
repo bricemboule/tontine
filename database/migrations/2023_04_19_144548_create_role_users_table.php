@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->date('dateDebut');
             $table->date('dateFinPrevue');
-            $table->date('dateFinEffective');
+            $table->date('dateFinEffective')->nullable();
             $table->text('observation')->nullable();
             $table->timestamps();
         });

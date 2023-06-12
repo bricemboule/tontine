@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Http\Requests;
-
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Validation\Validator;
+
 
 class CreerUser extends FormRequest
 {
@@ -26,8 +26,8 @@ class CreerUser extends FormRequest
         return [
             'nom' => 'required',
             'prenom'=>'required',
-            'anneeNais'=> 'required|integer',
-            'anneeEntree' =>'required|integer',
+            'anneeNais'=> 'required',
+            'anneeEntree' =>'required',
             'nbDeFemme'=> 'required|integer',
             'login'=> 'required',
             'password' => 'required',
@@ -35,7 +35,7 @@ class CreerUser extends FormRequest
             'nomEpoux' => 'required',
             'telephone1' => 'required',
             'email' => 'required|unique:users,email',
-            'photo' => 'required|mimes:png,jpg,jpeg,gif'
+            //'photo' => 'required|mimes:png,jpg,jpeg,gif'
         ];
     }
 
@@ -56,8 +56,20 @@ class CreerUser extends FormRequest
             'telephone1.required' => 'Vous devez entrer votre numéro de téléphone',
             'email.required' => 'Vous devez entrer votre adresse email',
             'email.unique' => 'Cette adresse email existe déjà',
-            'photo.required'=> 'Vous devez entrer votre photo'
+            //'photo.required'=> 'Vous devez entrer votre photo',
+            //'photo.mimes' => 'L\'extension de la photo doit être : png,jpg,jpeg,gif '
         ];
 
+    }
+
+    public function failedValidation(Validator $validator){
+
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'status'=> 422,
+            'error' =>true,
+            'message' => 'Erreur de validation',
+            'errorsList' => $validator->errors()
+        ]));
     }
 }
