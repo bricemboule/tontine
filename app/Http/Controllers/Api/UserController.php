@@ -45,10 +45,9 @@ class UserController extends Controller
             //return response()->json($request->dateFinEffective);
 
              $membre->save();
-             $role = Role::Where('nom', $request->role)->first();
-             return response()->json($role->id);
+             $responsabilite = Role::Where('nom', 'secretaire')->first();
 
-             $membre->roles()->attach($role->id, [
+             $membre->roles()->attach($responsabilite->id, [
                     'dateDebut' => $request->dateDebut,
                     'dateFinPrevue' =>$request->dateFinPrevue,
                     'dateFinEffective' => $request->dateFinEffective
