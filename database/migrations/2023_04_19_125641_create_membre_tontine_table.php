@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cotisation_membre', function (Blueprint $table) {
+        Schema::create('membre_tontine', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cotisation_id')->constrained();
+            $table->foreignId('tontine_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
@@ -27,10 +27,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('cotisation_membre', function(Blueprint $table){
+        Schema::table('membre_tontine', function(Blueprint $table){
 
-            $table->dropColumn(["cotisation_id", "user_id"]);
+            $table->dropColumn(["tontine_id", "user_id"]);
         });
-        Schema::dropIfExists('cotisation_membre');
+        Schema::dropIfExists('membre_tontine');
     }
 };

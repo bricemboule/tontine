@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('couponVersement');
             $table->foreignId('user_id')->constrained();
             $table->foreignId('seance_id')->constrained();
-            $table->foreignId('cotisation_id')->constrained();
+            $table->foreignId('tontine_id')->constrained();
             $table->timestamps();
         });
 
@@ -32,7 +32,7 @@ return new class extends Migration
     {
         Schema::table('versement_cotis',function(Blueprint $table){
 
-            $table->dropColumn(["user_id", "seance_id", "cotisation_id"]);
+            $table->dropColumn(["user_id", "seance_id", "tontine_id"]);
         });
         Schema::dropIfExists('versement_cotis');
     }

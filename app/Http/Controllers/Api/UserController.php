@@ -7,6 +7,7 @@ use App\Http\Requests\CreerUser;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Role;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
@@ -39,12 +40,18 @@ class UserController extends Controller
             $membre->email = $request->email;
             $membre->photo = $request->photo;
 
-             $membre->save();
+            //dd($membre);
 
-             $membre->roles()->attach($request->roleId, [
-                    'dateDebut' => $request->date_debut,
-                    'dateFinPrevue' =>$request->date_fin_prevue,
-                    'dateFinEffective' => $request->date_fin_effective
+            //return response()->json($request->dateFinEffective);
+
+             $membre->save();
+             $role = Role::Where('nom', $request->role)->first();
+             return response()->json($role->id);
+
+             $membre->roles()->attach($role->id, [
+                    'dateDebut' => $request->dateDebut,
+                    'dateFinPrevue' =>$request->dateFinPrevue,
+                    'dateFinEffective' => $request->dateFinEffective
              ]);
 
             return response()->json([

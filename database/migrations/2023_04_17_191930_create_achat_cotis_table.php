@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('numLot');
             $table->decimal('prixAchat',15,2);
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('cotisation_id')->constrained();
+            $table->foreignId('tontine_id')->constrained();
             $table->foreignId('seance_id');
             $table->timestamps();
         });
@@ -32,7 +32,7 @@ return new class extends Migration
     {
         Schema::table('achat_cotis', function(Blueprint $table){
 
-            $table->dropColumn(["user_id", "cotisation_id", "seance_id"]);
+            $table->dropColumn(["user_id", "tontine_id", "seance_id"]);
         });
         Schema::dropIfExists('achat_cotis');
     }
