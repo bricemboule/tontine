@@ -40,23 +40,19 @@ class UserController extends Controller
             $membre->email = $request->email;
             $membre->photo = $request->photo;
 
-            //dd($membre);
-
-            //return response()->json($request->dateFinEffective);
-
              $membre->save();
-             $responsabilite = Role::Where('nom', 'secretaire')->first();
-
+             $responsabilite = Role::Where('nom', $request->role)->first();
              $membre->roles()->attach($responsabilite->id, [
                     'dateDebut' => $request->dateDebut,
-                    'dateFinPrevue' =>$request->dateFinPrevue,
+                    'dateFinPrevue' =>$request->dateFinPrevu,
                     'dateFinEffective' => $request->dateFinEffective
              ]);
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Membre créé avec succes',
-                'membre' => $membre
+                'membre' => $membre,
+                'role' => $membre->roles
                 ]);
         
         } catch (Exception $e) {
