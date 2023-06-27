@@ -56,8 +56,8 @@ class CreerUser extends FormRequest
             'telephone1.required' => 'Vous devez entrer votre numéro de téléphone',
             'email.required' => 'Vous devez entrer votre adresse email',
             'email.unique' => 'Cette adresse email existe déjà',
-            //'photo.required'=> 'Vous devez entrer votre photo',
-            //'photo.mimes' => 'L\'extension de la photo doit être : png,jpg,jpeg,gif '
+            'photo.required'=> 'Vous devez entrer votre photo',
+            'photo.mimes' => 'L\'extension de la photo doit être : png,jpg,jpeg,gif '
         ];
 
     }

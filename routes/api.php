@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\PermissionController;
-use App\Http\Controllers\Api\RoleController;
-use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\MembreController;
+use App\Http\Controllers\Api\Administrateur\PermissionController;
+use App\Http\Controllers\Api\Administrateur\RoleController;
+use App\Http\Controllers\Api\Administrateur\UserController;
+use App\Http\Controllers\Api\Secretaire\MembreController;
 use App\Models\Permisssion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +26,8 @@ Route::apiResource('roles', RoleController::class);
 Route::apiResource('permissions', PermissionController::class);
 Route::apiResource('membres', MembreController::class);
 Route::apiResource('users', UserController::class);
+
+
 
 Route::middleware('auth->sanctum')->group(function(){
 
