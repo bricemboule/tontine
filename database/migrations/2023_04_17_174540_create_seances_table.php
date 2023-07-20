@@ -16,8 +16,9 @@ return new class extends Migration
             $table->date('dateSeance');
             $table->string('typeSeance');
             $table->decimal('depenseBoisson',15,2);
-            $table->text('rapportReunion');
+            $table->text('rapportReunion')->nullable();
             $table->string('lieu');
+            $table->timestamps();
         });
     }
 

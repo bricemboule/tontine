@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tontine', function (Blueprint $table) {
+        Schema::create('tontines', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
+            $table->integer('nbDeParticipants');
             $table->date('dateDebut');
             $table->date('dateFin');
-            $table->text('onservation');
+            $table->text('observation');
             $table->timestamps();
         });
     }
