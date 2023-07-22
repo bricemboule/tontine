@@ -46,11 +46,11 @@ class RoleController extends Controller
     }
 
 
-    public function update(RoleRequest $request, $id){
-        $roleEdit = Role::find($id);
+    public function update(RoleRequest $request, Role $roleEdit){
+        
         $roleEdit->nom = $request->nom;
         $roleEdit->description = $request->description;
-        $roleEdit->save();
+        $roleEdit->update();
 
         return response()->json("role modifié avec succès");
     }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\Secretaire;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\Requests\CreerMembreRequest;
+use App\Http\Requests\CreerMembreRequest;
+use App\Http\Requests\EditMembreRequest;
 use App\Models\User;
 use App\Http\Resources\MembreResource;
+use Illuminate\Support\Facades\Hash;
 
 class MembreController extends Controller
 {
@@ -17,7 +18,7 @@ class MembreController extends Controller
 
     public function store(CreerMembreRequest $request){
 
-        $membreEdit = new User();
+        $membre = new User();
 
         try {
             
@@ -37,18 +38,12 @@ class MembreController extends Controller
 
              $membre->save();
              $token = $membre->createToken('registerToken')->plainTextToken;
-             $responsabilite = Role::Where('nom', 'membre')->first();
-             $membre->roles()->attach($responsabilite->id, [
-                    'dateDebut' => $request->dateDebut,
-                    'dateFinPrevue' =>$request->dateFinPrevu,
-                    'dateFinEffective' => $request->dateFinEffective
-             ]);
+            
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Membre créé avec succes',
-                'membre' => $membre,
-                'role' => $membre->roles
+                'membre' => $membre
                 ]);
         
         } catch (Exception $e) {
@@ -56,29 +51,32 @@ class MembreController extends Controller
         }
     }
 
-    public function show(User $user){
+    public function show(User $membre){
 
-        return new UserResource($user);
+        return new MembreResource($membre);
     }
 
-    public function update(CreerMembreRequest $request, $id){
-
+    public function update(EditMembreRequest $request, $id){
+        
         $membreEdit = User::find($id);
+       
         $membreEdit->nom = $request->nom;
         $membreEdit->prenom = $request->prenom;
+        
         $membreEdit->anneeNais = $request->anneeNais;
         $membreEdit->anneeEntree = $request->anneeEntree;
         $membreEdit->nbDeFemme = $request->nbDeFemme;
-        //$membreEdit->login = $request->login;
-        //$membreEdit->password = Hash::make($request->password);
         $membreEdit->sexe = $request->sexe;
         $membreEdit->nomEpoux = $request->nomEpoux;
         $membreEdit->telephone1 = $request->telephone1;
         $membreEdit->telephone2 = $request->telephone2;
         $membreEdit->email = $request->email;
         $membreEdit->photo = $request->photo;
+        $membreEdit->login = $request->login;
+        $membreEdit->password = Hash::make($request->password);
+        
 
-        $membreEdit->save();
+        $membreEdit->update();
 
         return response()->json("Informations du membre modifiées avec succès");
     }

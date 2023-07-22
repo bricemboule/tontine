@@ -29,7 +29,7 @@ class NewSeanceRequest extends FormRequest
             'dateSeance' => 'required',
             'typeSeance' => 'required',
             'depenseBoisson' => 'required',
-            'lieu' => 'required',
+            'lieu' => 'required'
         ];
     }
 

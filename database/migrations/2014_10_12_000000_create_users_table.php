@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('nbDeFemme');
             $table->string('login');
             $table->string('password');
-            $table->boolean('valide')->default(False);
+            $table->boolean('valide')->default(false);
             $table->char('sexe');
             $table->string('nomEpoux');
             $table->string('telephone1');

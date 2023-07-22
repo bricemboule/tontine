@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\SeanceResource;
 use App\Http\Requests\NewSeanceRequest;
 use App\Models\Seance;
+use Exception;
 
 class SeanceController extends Controller
 {
@@ -25,10 +26,10 @@ class SeanceController extends Controller
         $seance = new Seance();
 
         try {
-            $seance->dateSeance = $request->date;
-            $seance->typeSeance = $request->type;
-            $seance->depenseBoisson = $request->depense;
-            $seance->rapportReunion = $request->rapport;
+            $seance->dateSeance = $request->dateSeance;
+            $seance->typeSeance = $request->typeSeance;
+            $seance->depenseBoisson = $request->depenseBoisson;
+            $seance->rapportReunion = $request->rapportReunion;
             $seance->lieu = $request->lieu;
 
             $seance->save();
@@ -37,7 +38,7 @@ class SeanceController extends Controller
 
                 'status' => '200',
                 'message' => 'séance créee avec succès',
-                'role' => $seance
+                'seance' => $seance
             ]);
 
         } catch (Exception $e) {
@@ -47,10 +48,10 @@ class SeanceController extends Controller
 
     public function update(NewSeanceRequest $request, Seance $seance){
         
-        $seance->dateSeance = $request->date;
-        $seance->typeSeance = $request->type;
-        $seance->depenseBoisson = $request->depense;
-        $seance->rapportReunion = $request->rapport;
+        $seance->dateSeance = $request->dateSeance;
+        $seance->typeSeance = $request->typeSeance;
+        $seance->depenseBoisson = $request->depenseBoisson;
+        $seance->rapportReunion = $request->rapportReunion;
         $seance->lieu = $request->lieu;
         $seance->save();
 

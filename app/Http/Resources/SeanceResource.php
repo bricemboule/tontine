@@ -18,7 +18,7 @@ class SeanceResource extends JsonResource
         return [
             'id' => $this->id,
             'dateSeance' => $this->dateSeance,
-            'typeSeance' => $this->typeSeances,
+            'typeSeance' => $this->typeSeance,
             'depenseBoisson' => $this->depenseBoisson,
             'rapportReunion' => $this->rapportReunion,
             'lieu' =>$this->lieu

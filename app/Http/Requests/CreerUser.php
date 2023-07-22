@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
 
 class CreerUser extends FormRequest
@@ -35,6 +36,7 @@ class CreerUser extends FormRequest
             'nomEpoux' => 'required',
             'telephone1' => 'required',
             'email' => 'required|unique:users,email',
+            'email' =>[Rule::unique('users')->ignore($this->id)]
             //'photo' => 'required|mimes:png,jpg,jpeg,gif'
         ];
     }

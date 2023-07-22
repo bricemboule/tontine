@@ -21,6 +21,7 @@ class MembreResource extends JsonResource
             'anneeNais' => $this->anneeNais,
             'anneeEntree' => $this->anneeEntree,
             'nbDeFemme' => $this->nbDeFemme,
+            'valide' => $this->valide,
             'login' => $this->login,
             'password' => $this->password,
             'sex' => $this->sexe,
@@ -28,7 +29,6 @@ class MembreResource extends JsonResource
             'telephone1' => $this->telephone1,
             'telephone2' =>$this->telephone2,
             'email' => $this->email,
-            'role' =>$this->roles,
             'photo'=> $this->photo
 
         ];
