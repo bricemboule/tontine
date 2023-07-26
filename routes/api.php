@@ -7,6 +7,10 @@ use App\Http\Controllers\Api\President\UserPresidentController;
 use App\Http\Controllers\Api\Secretaire\MembreController;
 use App\Http\Controllers\Api\Secretaire\SeanceController;
 use App\Http\Controllers\Api\Secretaire\TontineController;
+use App\Http\Controllers\Api\Tresorier\DepenseController;
+use App\Http\Controllers\Api\Tresorier\TypeRetraitController;
+use App\Http\Controllers\Api\Tresorier\RetraitController;
+use App\Http\Controllers\Api\Tresorier\PretController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +34,11 @@ Route::apiResource('users', UserController::class);
 Route::apiResource('seances', SeanceController::class);
 Route::put('valider/{id}', [UserPresidentController::class, 'valider']);
 Route::apiResource('tontines', TontineController::class);
+Route::apiResource('depenses', DepenseController::class);
+Route::apiResource('type_retraits', TypeRetraitController::class);
+Route::apiResource('retraits', RetraitController::class);
+Route::apiResource('prets', PretController::class);
+
 
 
 Route::middleware('auth->sanctum')->group(function(){

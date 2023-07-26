@@ -25,7 +25,7 @@ class Seance extends Model
     }
 
     public function membre(){
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(Seance::class, "membre_seance", "seance_id", "user_id")->withPivot("raisonAbsence", "commentaire", "present");
     }
 
     public function epargnes(){
@@ -40,5 +40,9 @@ class Seance extends Model
     public function remboursements(){
 
         return $this->hasMany(Remboursement::class);
+    }
+
+    public function retraits(){
+        return $this->hasMany(Retrait::class);
     }
 }

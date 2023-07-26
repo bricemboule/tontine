@@ -95,7 +95,7 @@ class User extends Authenticatable
 
     public function permissions(){
 
-        return $this->b0elongsTo(Permisson::class, "permission_user", "user_id", "permission_id");
+        return $this->belongsTo(Permisson::class, "permission_user", "user_id", "permission_id");
     }
 
 
@@ -126,6 +126,20 @@ class User extends Authenticatable
     public function hasAnyRoles($role){
 
         return $this->roles()->whereIn("nom", $role)->first() !==null;
+    }
+
+    public function retraits(){
+
+        return $this->hasMany(Retrait::class);
+    }
+
+    public function prets(){
+        return $this->hasMany(Pret::class);
+    }
+
+    public function membre(){
+
+        return $this->belongsToMany(Seance::class, "membre_seance", "user_id", "seance_id")->withPivot("raisonAbsence", "commentaire", "present");
     }
 
 }

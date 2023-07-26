@@ -46,7 +46,7 @@ class TontineController extends Controller
     }
 
     public function update(TontineRequest $request, Tontine $tontine){
-        return response()->json($tontine);
+        
         $tontine->nom = $request->nom;
         $tontine->nbDeParticipants = $request->nbDeParticipants;
         $tontine->dateDebut = $request->dateDebut;
