@@ -9,10 +9,14 @@ class Tontine extends Model
 {
     use HasFactory;
 
-    public function user(){
+    public function membres(){
 
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class);
     }
 
+    public function versement_cotis(){
+
+        return $this->hasMany(VersementCotis::class);
+    }
     
 }

@@ -34,7 +34,7 @@ class RemboursementController extends Controller
             $remboursement->pret_id = $pret->id;
             $remboursement->seance_id = $seance->id;
             
-            $type->save();
+            $remboursement->save();
 
             return response()->json([
                 'status' => '200',
@@ -58,7 +58,7 @@ class RemboursementController extends Controller
             $remboursement->pret_id = $pret->id;
             $remboursement->seance_id = $seance->id;
             
-            $type->update();
+            $remboursement->update();
 
             return response()->json([
                 'status' => '200',

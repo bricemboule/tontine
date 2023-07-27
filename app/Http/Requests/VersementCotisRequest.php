@@ -6,7 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class RemboursementInteretRequest extends FormRequest
+
+class VersementCotisRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +29,7 @@ class RemboursementInteretRequest extends FormRequest
             'montant' => 'required',
             'modeVersement' => 'required',
             'couponVersement' => 'required',
-            'pret' => 'required',
+            'tontine' => 'required',
             'seance' => 'required',
             'membre' => 'required'
         ];
@@ -38,12 +39,12 @@ class RemboursementInteretRequest extends FormRequest
 
         return [
 
-            'montant.required' => 'Vous devez renseigner le montant du remboursement',
+            'montant.required' => 'Vous devez renseigner le montant de la cotisation',
             'modeVersement.required' => 'Vous devez entrer le mode de versement',
             'couponVersement.required' => 'Vous devez entrer le coupon de versement',
-            'pret.required' => 'Vous devez entrer le prêt du remboursement',
-            'seance.required' => 'Vous devez entrer la séance du remboursement du prêt',
-            'membre.required' => 'Vous devez entrer le membre qui rembourse le prêt'
+            'tontine.required' => 'Vous devez entrer la tontine de la cotisation',
+            'seance.required' => 'Vous devez entrer la séance de la cotisation',
+            'membre.required' => 'Vous devez entrer le membre qui cotise'
         ];
     }
 

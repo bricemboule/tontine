@@ -5,8 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
-class RemboursementInteretRequest extends FormRequest
+class SanctionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,17 +20,15 @@ class RemboursementInteretRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
     public function rules(): array
     {
        
         return [
+            'dateSanction' => 'required',
+            'typeSanction' => 'required',
             'montant' => 'required',
-            'modeVersement' => 'required',
-            'couponVersement' => 'required',
-            'pret' => 'required',
-            'seance' => 'required',
             'membre' => 'required'
         ];
     }
@@ -38,12 +37,10 @@ class RemboursementInteretRequest extends FormRequest
 
         return [
 
-            'montant.required' => 'Vous devez renseigner le montant du remboursement',
-            'modeVersement.required' => 'Vous devez entrer le mode de versement',
-            'couponVersement.required' => 'Vous devez entrer le coupon de versement',
-            'pret.required' => 'Vous devez entrer le prêt du remboursement',
-            'seance.required' => 'Vous devez entrer la séance du remboursement du prêt',
-            'membre.required' => 'Vous devez entrer le membre qui rembourse le prêt'
+            'dateSanction.required' => 'Vous devez renseigner la date de la sanction',
+            'typeSanction.required' => 'Vous devez entrer la date de la sanction',
+            'montant.required' => 'Vous devez entrer le  montant de la sanction',
+            'membre.required' => 'Vous devez entrer le membre sanctionné'
         ];
     }
 

@@ -18,4 +18,8 @@ class VersementCotis extends Model
 
         return $this->belongsTo(Seance::class);
     }
+
+    public function tontine(){
+        return $this->belongsTo(Tontine::class);
+    }
 }

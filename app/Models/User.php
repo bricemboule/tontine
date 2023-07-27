@@ -63,6 +63,11 @@ class User extends Authenticatable
         return $this->hasMany(VersementSol::class);
     }
 
+    public function suspensions(){
+
+        return $this->hasMany(Sanction::class);
+    }
+
     public function don_entres(){
 
         return $this->hasMany(DonEntre::class);

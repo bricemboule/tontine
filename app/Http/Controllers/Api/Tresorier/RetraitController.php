@@ -16,10 +16,10 @@ class RetraitController extends Controller
 {
     public function index(){
 
-        return RetraitResource::collection(TypeRetrait::all());
+        return RetraitResource::collection(Retrait::all());
     }
 
-    public function show(Retrait $etrait){
+    public function show(Retrait $retrait){
 
         return new RetraitResource($retrait);
     }
@@ -54,7 +54,7 @@ class RetraitController extends Controller
 
     public function update(RetraitRequest $request, Retrait $retrait){
 
-        $type = TypeRetrait::where('intitule', $request->type)->first();
+        $type = TypeRetrait::where('intitule', $request->type_retrait)->first();
         $user = User::where('nom', $request->membre)->first();
         $seance = Seance::where('dateSeance', $request->seance)->first();
         try {
@@ -62,9 +62,13 @@ class RetraitController extends Controller
             $retrait->type_retrait_id = $type->id;
             $retrait->seance_id = $seance->id;
             $retrait->user_id = $user->id;
-            $type->update();
+            $retrait->update();
             
-            return response()->json("Retrait modifié avec succès");
+            return response()->json([
+                'status' => '200',
+                'message' => 'Retrait modifié avec succès',
+                'retrait' => $retrait
+            ]);
         } catch (Exception $e) {
             return response()->json($e);
         }

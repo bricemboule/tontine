@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sanctions', function (Blueprint $table) {
+        Schema::create('suspensions', function (Blueprint $table) {
             $table->id();
-            $table->date('dateSanction');
-            $table->decimal('montant',15,2);
+            $table->string('motif');
+            $table->string('periode');
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('type_sanction_id')->constrained();
             $table->timestamps();
         });
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -28,10 +25,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sanctions', function(Blueprint $table){
+        Schema::table('suspensions',function(Blueprint $table){
 
-            $table->dropColumn(["user_id", "type_sanction_id"]);
+            $table->dropColumn("user_id");
         });
-        Schema::dropIfExists('sanctions');
+        Schema::dropIfExists('suspensions');
     }
 };

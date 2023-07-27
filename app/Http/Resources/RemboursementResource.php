@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RemboursemetInteretResource extends JsonResource
+class RemboursementResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,8 +18,6 @@ class RemboursemetInteretResource extends JsonResource
 
             'id' => $this->id,
             'montant' => $this->montant,
-            'modeVersement' =>$this->modeVersement,
-            'couponVersement' => $this->couponVersement,
             'pret_id' => $this->pret_id,
             'seance_id' => $this->seance_id
         ];

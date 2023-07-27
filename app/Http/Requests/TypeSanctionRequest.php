@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 
-class RemboursementInteretRequest extends FormRequest
+class TypeSanctionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,8 @@ class RemboursementInteretRequest extends FormRequest
      */
     public function rules(): array
     {
-       
         return [
-            'montant' => 'required',
-            'modeVersement' => 'required',
-            'couponVersement' => 'required',
-            'pret' => 'required',
-            'seance' => 'required',
-            'membre' => 'required'
+            'intitule' => 'required|unique:type_sanctions,intitule'
         ];
     }
 
@@ -38,12 +32,8 @@ class RemboursementInteretRequest extends FormRequest
 
         return [
 
-            'montant.required' => 'Vous devez renseigner le montant du remboursement',
-            'modeVersement.required' => 'Vous devez entrer le mode de versement',
-            'couponVersement.required' => 'Vous devez entrer le coupon de versement',
-            'pret.required' => 'Vous devez entrer le prêt du remboursement',
-            'seance.required' => 'Vous devez entrer la séance du remboursement du prêt',
-            'membre.required' => 'Vous devez entrer le membre qui rembourse le prêt'
+            'intitule.required' => 'Vous devez entrer l\'intitulé de la sanction',
+            'intitule.unique' => 'Cette sanction existe déjà dans la base de donnée'
         ];
     }
 

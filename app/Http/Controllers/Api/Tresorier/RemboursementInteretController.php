@@ -9,34 +9,35 @@ use App\Http\Requests\RemboursementInteretRequest;
 use App\Models\User;
 use App\Models\Pret;
 use App\Models\Seance;
-use App\Models\RemboursementInteret;
+use App\Models\VersementInteret;
 
 class RemboursementInteretController extends Controller
 {
     public function index(){
 
-        return RemboursementInteretResource::collection(RemboursementInteret::all());
+        return RemboursementInteretResource::collection(VersementInteret::all());
     }
 
-    public function show(RemboursementInteret $interet){
+    public function show(VersementInteret $interet){
 
         return new RemboursementInteretResource($interet);
     }
 
     public function store(RemboursementInteretRequest $request){
-        $remboursement = new RemboursementInteret();
+        $remboursement = new VersementInteret();
         $pret = Pret::where('montant', $request->pret)->first();
         $user = User::where('nom', $request->membre)->first();
         $seance = Seance::where('dateSeance', $request->seance)->first();
-
+            
         try {
             $remboursement->montant = $request->montant;
             $remboursement->modeVersement = $request->modeVersement;
-            $remboursement->couponVersemsent = $request->couponVersement;
+            $remboursement->couponVersement = $request->couponVersement;
             $remboursement->pret_id = $pret->id;
             $remboursement->seance_id = $seance->id;
+            $remboursement->user_id = $user->id;
             
-            $type->save();
+            $remboursement->save();
 
             return response()->json([
                 'status' => '200',
@@ -49,7 +50,7 @@ class RemboursementInteretController extends Controller
         }
     }
 
-    public function update(RemboursementInteretRequest $request, RemboursementInteret $remboursement){
+    public function update(RemboursementInteretRequest $request, VersementInteret $remboursement){
 
         $pret = Pret::where('montant', $request->pret)->first();
         $user = User::where('nom', $request->membre)->first();
@@ -61,8 +62,9 @@ class RemboursementInteretController extends Controller
             $remboursement->couponVersemsent = $request->couponVersement;
             $remboursement->pret_id = $pret->id;
             $remboursement->seance_id = $seance->id;
+            $remboursement->user_id = $user->id;
             
-            $type->save();
+            $remboursement->update();
 
             return response()->json([
                 'status' => '200',
@@ -75,9 +77,9 @@ class RemboursementInteretController extends Controller
         }
     }
 
-    public function destroy(RemboursementInteret $remboursement){
+    public function destroy(VersementInteret $interet){
 
-        $remboursement->delete();
+        $interet->delete();
 
         return response()->json("Remboursement intérêt supprimé avec succès");
     }
