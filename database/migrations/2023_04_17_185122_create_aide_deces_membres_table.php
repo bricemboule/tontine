@@ -21,7 +21,10 @@ return new class extends Migration
             $table->date('dateAide');
             $table->string('lieuEnterrement');
             $table->date('dateVoyage');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

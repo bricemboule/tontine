@@ -14,8 +14,14 @@ return new class extends Migration
         Schema::create('remboursements', function (Blueprint $table) {
             $table->id();
             $table->decimal('montant',15,2);
-            $table->foreignId('seance_id')->constrained();
-            $table->foreignId('pret_id')->constrained();
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('pret_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

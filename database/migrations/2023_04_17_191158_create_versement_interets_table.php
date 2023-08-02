@@ -16,9 +16,18 @@ return new class extends Migration
             $table->decimal('montant', 15,2);
             $table->string('modeVersement');
             $table->string('couponVersement');
-            $table->foreignId('seance_id')->constrained();
-            $table->foreignId('pret_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('pret_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

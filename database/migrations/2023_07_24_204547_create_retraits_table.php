@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('retraits', function (Blueprint $table) {
             $table->id();
             $table->decimal('montant');
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('seance_id')->constrained();
-            $table->foreignId('type_retrait_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('type_retrait_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }

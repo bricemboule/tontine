@@ -15,8 +15,14 @@ return new class extends Migration
             $table->id();
             $table->date('dateSanction');
             $table->decimal('montant',15,2);
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('type_sanction_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('type_sanction_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

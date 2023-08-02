@@ -105,8 +105,6 @@ public function login(LoginRequest $request){
             'status' => 200,
             'message' => 'Utilisateur déconnecté avec succès'
         ]);
-
-        //dd(Auth::user()->currentAccessToken()->token, Auth::user()->currentAccessToken()->id);
           
     }
 }

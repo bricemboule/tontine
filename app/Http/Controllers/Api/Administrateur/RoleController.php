@@ -11,7 +11,7 @@ use Exception;
 
 class RoleController extends Controller
 {
-    public function index(RoleRequest $request){
+    public function index(){
 
         return RoleResource::collection(Role::all());
        

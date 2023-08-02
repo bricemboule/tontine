@@ -16,8 +16,14 @@ return new class extends Migration
             $table->decimal('montant',15,2);
             $table->text('observation');
             $table->decimal('pourcentage');
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('seance_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

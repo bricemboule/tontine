@@ -19,7 +19,10 @@ return new class extends Migration
             $table->string('donnateur');
             $table->string('telDonnateur');
             $table->string('typeDon');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
     }

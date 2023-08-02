@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('role_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('role_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('role_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->date('dateDebut');
             $table->date('dateFinPrevue');
             $table->date('dateFinEffective')->nullable();

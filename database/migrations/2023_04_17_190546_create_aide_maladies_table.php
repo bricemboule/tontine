@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('hopital');
             $table->date('dateHospitalisation');
             $table->date('dateSortie');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
 
         Schema::enableForeignKeyConstraints();
