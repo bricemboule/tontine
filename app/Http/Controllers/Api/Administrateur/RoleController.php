@@ -11,7 +11,7 @@ use Exception;
 
 class RoleController extends Controller
 {
-    public function index(RoleRequest $request){
+    public function index(){
 
         return RoleResource::collection(Role::all());
        
@@ -46,8 +46,8 @@ class RoleController extends Controller
     }
 
 
-    public function update(RoleRequest $request, Role $roleEdit){
-        
+    public function update(RoleRequest $request, $id){
+        $roleEdit = Role::find($id);
         $roleEdit->nom = $request->nom;
         $roleEdit->description = $request->description;
         $roleEdit->update();

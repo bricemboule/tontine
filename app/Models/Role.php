@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+    protected $filable =[
+        'nom',
+        'description'
+    ];
 
     public function users(){
 

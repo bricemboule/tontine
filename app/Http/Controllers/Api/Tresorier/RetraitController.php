@@ -10,6 +10,7 @@ use App\Models\TypeRetrait;
 use App\Models\Retrait;
 use App\Models\User;
 use App\Models\Seance;
+use Exception;
 
 
 class RetraitController extends Controller
