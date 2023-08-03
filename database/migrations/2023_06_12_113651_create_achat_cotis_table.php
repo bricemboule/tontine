@@ -16,9 +16,18 @@ return new class extends Migration
             $table->decimal('montantAchete');
             $table->integer('numLot');
             $table->decimal('prixAchat',15,2);
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('tontine_id')->constrained();
-            $table->foreignId('seance_id');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('tontine_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 

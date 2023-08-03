@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('annee_membre', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('annee_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('annee_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
         });
 
         Schema::enableForeignKeyConstraints();

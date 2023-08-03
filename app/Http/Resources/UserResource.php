@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'nbDeFemme' => $this->nbDeFemme,
             'login' => $this->login,
             'password' => $this->password,
-            'sex' => $this->sexe,
+            'sexe' => $this->sexe,
             'nomEpoux' => $this->nomEpoux,
             'telephone1' => $this->telephone1,
             'telephone2' =>$this->telephone2,

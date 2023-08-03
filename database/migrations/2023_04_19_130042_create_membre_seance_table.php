@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('membre_seance', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('seance_id')->constrained();
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->string('raison_absence');
             $table->text('commentaires');
             $table->boolean('present')->default(1);

@@ -16,7 +16,10 @@ return new class extends Migration
             $table->decimal('montant',15,2);
             $table->string('raison');
             $table->text('observation');
-            $table->foreignId('seance_id')->constrained();
+            $table->foreignId('seance_id')
+                  ->constrained()
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');
             $table->timestamps();
         });
 
