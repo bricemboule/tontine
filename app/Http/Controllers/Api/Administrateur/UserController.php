@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Administrateur;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreerUser;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -19,10 +20,7 @@ class UserController extends Controller
 {
 
     public function index(){
-
-            return UserResource::collection(User::paginate());
-
-            
+        return UserResource::collection(User::paginate());
     }
 
     public function store(CreerUser $request){
@@ -69,6 +67,10 @@ class UserController extends Controller
     public function show(User $user){
 
         return new UserResource($user);
+    }
+
+    public function update(UpdateUserRequest $request, User $user){
+        return response()->json($user);
     }
 
     public function destroy(User $user){

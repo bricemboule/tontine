@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
-
-class CreerUser extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,10 +20,11 @@ class CreerUser extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
      */
     public function rules(): array
     {
+        $user = $this->route();
         return [
             'nom' => 'required',
             'prenom'=>'required',
@@ -35,7 +36,7 @@ class CreerUser extends FormRequest
             'sexe'=> 'required',
             'nomEpoux' => 'required',
             'telephone1' => 'required',
-            'email' => 'required|unique:users,email',
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             //'photo' => 'required|mimes:png,jpg,jpeg,gif'
         ];
     }

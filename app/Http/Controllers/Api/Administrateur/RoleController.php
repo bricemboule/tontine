@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Administrateur;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\RoleResource;
 use App\Http\Requests\RoleRequest;
+use App\Http\Requests\RoleEditRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Exception;
@@ -46,13 +47,13 @@ class RoleController extends Controller
     }
 
 
-    public function update(RoleRequest $request, $id){
+    public function update(RoleEditRequest $request, $id){
         $roleEdit = Role::find($id);
         $roleEdit->nom = $request->nom;
         $roleEdit->description = $request->description;
         $roleEdit->update();
 
-        return response()->json("role modifié avec succès");
+        return response()->json($roleEdit);
     }
 
 
