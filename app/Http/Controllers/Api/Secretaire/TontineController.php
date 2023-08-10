@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TontineRequest;
 use App\Http\Resources\TontineResource;
 use App\Models\Tontine;
+use Exception;
 
 class TontineController extends Controller
 {

@@ -9,6 +9,14 @@ class Tontine extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nom',
+        'nbDeParticipants',
+        'dateDebut',
+        'dateFin',
+        'observation'
+    ];
+
     public function membres(){
 
         return $this->hasMany(User::class);

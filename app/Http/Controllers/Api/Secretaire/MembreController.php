@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreerMembreRequest;
 use App\Http\Requests\EditMembreRequest;
 use App\Models\User;
+use App\Models\Role;
 use App\Http\Resources\MembreResource;
 use Illuminate\Support\Facades\Hash;
+use Exception;
 
 class MembreController extends Controller
 {
@@ -38,12 +40,18 @@ class MembreController extends Controller
 
              $membre->save();
              $token = $membre->createToken('registerToken')->plainTextToken;
-            
+             $responsabilite = Role::Where('nom', $request->role)->first();
+             $membre->roles()->attach($responsabilite->id, [
+                    'dateDebut' => $request->dateDebut,
+                    'dateFinPrevue' =>$request->dateFinPrevu,
+                    'dateFinEffective' => $request->dateFinEffective
+             ]);
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Membre créé avec succes',
-                'membre' => $membre
+                'membre' => $membre,
+                'role' => $membre->roles
                 ]);
         
         } catch (Exception $e) {
@@ -83,7 +91,7 @@ class MembreController extends Controller
 
     public function destroy(User $user){
 
-        $use->delete();
+        $user->delete();
 
         return response()->json("Membre supprimé avec succès");
     }
