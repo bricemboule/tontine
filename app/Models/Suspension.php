@@ -11,4 +11,9 @@ class Suspension extends Model
 
         return $this->belongsTo(User::class);
     }
+
+    public function seance(){
+
+        return $this->belongsTo(Seance::class);
+    }
 }

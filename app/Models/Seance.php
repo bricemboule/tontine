@@ -45,4 +45,9 @@ class Seance extends Model
     public function retraits(){
         return $this->hasMany(Retrait::class);
     }
+
+    public function suspensions(){
+
+        return $this->hasMany(Suspension::class);
+    }
 }

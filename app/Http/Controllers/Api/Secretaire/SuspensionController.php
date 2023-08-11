@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\SuspensionResource;
 use App\Http\Requests\SuspensionRequest;
+use App\Models\Seance;
 use App\Models\User;
 use App\Models\Suspension;
+use Exception;
 
 class SuspensionController extends Controller
 {
@@ -16,21 +18,23 @@ class SuspensionController extends Controller
     }
 
     public function show(Suspension $suspension){
-
         return new SuspensionResource($suspension);
     }
 
     public function store(SuspensionRequest $request){
 
         $suspension = new Suspension();
-
+      
         $user = User::where('nom', $request->membre)->first();
-
+        $seance = Seance::where('dateSeance', $request->seance)->first();
+      
 
         try {
             $suspension->motif = $request->motif;
             $suspension->periode = $request->periode;
             $suspension->user_id = $user->id;
+            $suspension->seance_id = $seance->id;
+           
             $suspension->save();
 
             return response()->json([
@@ -41,19 +45,21 @@ class SuspensionController extends Controller
 
         } catch (Exception $e) {
             
-            return respons()->json($e);
+            return response()->json($e);
         }
     }
 
     public function update(SuspensionRequest $request, Suspension $suspension){
 
         $user = User::where('nom', $request->membre)->first();
+        $seance = Seance::where('dateSeance', $request->seance)->first();
 
 
         try {
             $suspension->motif = $request->motif;
             $suspension->periode = $request->periode;
             $suspension->user_id = $user->id;
+            $suspension->seance_id = $seance->id;
             $suspension->update();
 
             return response()->json([
@@ -64,7 +70,7 @@ class SuspensionController extends Controller
 
         } catch (Exception $e) {
             
-            return respons()->json($e);
+            return response()->json($e);
         }
     }
 

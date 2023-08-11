@@ -14,7 +14,11 @@ class UserPresidentController extends Controller
         
         $membre->update(['valide'=> true]);
 
-        return response()->json($membre);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Membre validé avec succès',
+            'membre' => $membre
+        ]);
         //return response()->json("Membre validé avec succès");
     }
 }
