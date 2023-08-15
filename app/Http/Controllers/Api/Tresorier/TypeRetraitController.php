@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\NewTypeRetraitRequest;
 use App\Http\Resources\TypeRetraitResource;
 use App\Models\TypeRetrait;
+use Exception;
 
 class TypeRetraitController extends Controller
 {
@@ -25,6 +26,7 @@ class TypeRetraitController extends Controller
 
         try {
             $type->intitule = $request->intitule;
+            $type->description = $request->description;
             $type->save();
 
             return response()->json([
@@ -43,6 +45,7 @@ class TypeRetraitController extends Controller
     
         try {
             $type_retrait->intitule = $request->intitule;
+            $type_retrait->description = $request->description;
             $type_retrait->update();
             
             return response()->json("Type retrait modifié avec succès");

@@ -40,6 +40,8 @@ Route::apiResource('membres', MembreController::class);
 Route::apiResource('users', UserController::class);
 Route::apiResource('seances', SeanceController::class);
 Route::put('valider/{id}', [UserPresidentController::class, 'valider']);
+Route::put('suspendre/{id}', [UserPresidentController::class, 'suspendre']);
+Route::put('retirerSuspendre/{id}', [UserPresidentController::class, 'retirerSuspendre']);
 Route::apiResource('tontines', TontineController::class);
 Route::apiResource('depenses', DepenseController::class);
 Route::apiResource('type_retraits', TypeRetraitController::class);
@@ -50,7 +52,7 @@ Route::apiResource('interets', RemboursementInteretController::class);
 Route::apiResource('cotisations', VersementCotisController::class);
 Route::apiResource('suspensions', SuspensionController::class);
 Route::apiResource('sanctions', SanctionController::class);
-Route::apiResource('type_sanctions', TypeSanctionController::class);
+Route::apiResource('type_amendes', TypeSanctionController::class);
 
 
 

@@ -15,18 +15,15 @@ use Exception;
 class VersementCotisController extends Controller
 {
     public function index(){
-
         return VersementCotisResource::collection(VersementCotis::all());
     }
 
     public function show(VersementCotis $cotisation){
-
         return new VersementCotisResource($cotisation);
     }
 
     public function store(VersementCotisRequest $request){
         $cotisation = new VersementCotis();
-       
         $user = User::where('nom', $request->membre)->first();
         $tontine = Tontine::where('nom', $request->tontine)->first();
         $seance = Seance::where('dateSeance', $request->seance)->first();
@@ -38,10 +35,7 @@ class VersementCotisController extends Controller
             $cotisation->user_id = $user->id;
             $cotisation->tontine_id = $tontine->id;
             $cotisation->seance_id = $seance->id;
-
-            
             $cotisation->save();
-
             return response()->json([
                 'status' => '200',
                 'message' => 'Cotisation enregistrée avec succès',
@@ -49,16 +43,16 @@ class VersementCotisController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json($e);
-
         }
     }
 
     public function update(VersementCotisRequest $request, VersementCotis $cotisation){
-
+        
         $user = User::where('nom', $request->membre)->first();
         $tontine = Tontine::where('nom', $request->tontine)->first();
         $seance = Seance::where('dateSeance', $request->seance)->first();
-
+     
+        
         try {
             $cotisation->montant = $request->montant;
             $cotisation->modeVersement = $request->modeVersement;
@@ -68,7 +62,6 @@ class VersementCotisController extends Controller
             $cotisation->seance_id = $seance->id;
             
             $cotisation->update();
-
             return response()->json([
                 'status' => '200',
                 'message' => 'Cotisation modifiée avec succès',
@@ -76,14 +69,11 @@ class VersementCotisController extends Controller
             ]);
         } catch (Exception $e) {
             return response()->json($e);
-
         }
     }
 
     public function destroy(VersementCotis $cotisation){
-
         $cotisation->delete();
-
         return response()->json("Cotisation supprimée avec succès");
     }
 }

@@ -7,25 +7,24 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TypeSanctionRequest;
 use App\Http\Resources\TypeSanctionResource;
 use App\Models\TypeSanction;
+use Exception;
 
 class TypeSanctionController extends Controller
 {
     public function index(){
-
         return TypeSanctionResource::collection(TypeSanction::all());
     }
 
-    public function show(TypeSanction $type_sanction){
-
-        return new TypeSanctionResource($type_sanction);
+    public function show($id){
+        $type = TypeSanction::find($id);
+        return new TypeSanctionResource($type);
     }
 
     public function store(TypeSanctionRequest $request){
-
         $sanction = new TypeSanction();
-
         try {
             $sanction->intitule = $request->intitule;
+            $sanction->description = $request->description;
             $sanction->save();
 
             return response()->json([
@@ -38,20 +37,20 @@ class TypeSanctionController extends Controller
         }
     }
 
-    public function update(TypeSanctionRequest $request, TypeSanction $type){
-        
+    public function update(TypeSanctionRequest $request, $id){
+        $typeSanction = TypeSanction::find($id);
         try {
-            $type->intitule = $request->intitule;
-            $type->update();
+            $typeSanction->intitule = $request->intitule;
+            $typeSanction->description = $request->description;
+            $typeSanction->update();
             return response()->json([
                 'status' => '200',
                 'message' => 'Sanction modifiée avec succès avec succès',
-                'type_sanction' => $type
+                'type_sanction' => $typeSanction
             ]);
         } catch (Exception $e) {
             return response()->json($e);
         }
-
     }
 
     public function destroy(TypeSanction $type){

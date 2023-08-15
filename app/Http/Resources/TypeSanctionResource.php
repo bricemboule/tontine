@@ -16,7 +16,8 @@ class TypeSanctionResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'intitule' => $this->intitule
+            'intitule' => $this->intitule,
+            'description'=>$this->description
         ];
     }
 }

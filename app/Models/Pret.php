@@ -14,7 +14,7 @@ class Pret extends Model
         return $this->hasMany(VersementInteret::class);
     }
 
-    public function membre(){
+    public function user(){
 
         return $this->belongsTo(User::class);
     }
@@ -22,5 +22,9 @@ class Pret extends Model
     public function remboursements(){
 
         return $this->hasMany(Remboursement::class);
+    }
+
+    public function seance(){
+        return $this->belongsTo(Seance::class);
     }
 }

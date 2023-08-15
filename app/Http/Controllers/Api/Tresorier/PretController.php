@@ -9,6 +9,7 @@ use App\Http\Requests\PretRequest;
 use App\Models\User;
 use App\Models\Pret;
 use App\Models\Seance;
+use Exception;
 
 class PretController extends Controller
 {
@@ -24,14 +25,15 @@ class PretController extends Controller
 
     public function store(PretRequest $request){
 
-        //return response()->json($request);
+        
         $pret = new Pret();
         $membre = User::where('nom', $request->membre)->first();
         $seance = Seance::where('dateSeance',$request->seance)->first();
+        
 
         try {
             $pret->montant = $request->montant;
-            $pret->observation = $request->observations;
+            $pret->observation = $request->observation;
             $pret->pourcentage = $request->pourcentage;
             $pret->user_id = $membre->id;
             $pret->seance_id = $seance->id;
@@ -55,7 +57,7 @@ class PretController extends Controller
 
         try {
             $pret->montant = $request->montant;
-            $pret->observation = $request->observations;
+            $pret->observation = $request->observation;
             $pret->pourcentage = $request->pourcentage;
             $pret->user_id = $membre->id;
             $pret->seance_id = $seance->id;

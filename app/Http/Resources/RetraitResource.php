@@ -18,9 +18,9 @@ class RetraitResource extends JsonResource
         return [
             'id' => $this->id,
             'montant' =>$this->montant,
-            'user_id' => $this->user_id,
-            'seance_id' => $this->seance_id,
-            'type_retrait_id' => $this->type_retrait_id
+            'user' => $this->user,
+            'seance' => $this->seance,
+            'type_retrait' => $this->typeRetrait
         ];
     }
 }

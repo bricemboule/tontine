@@ -18,8 +18,8 @@ class SanctionResource extends JsonResource
             'id' => $this->id,
             'dateSanction' => $this->dateSanction,
             'montant' => $this->montant,
-            'user_id' => $this->user_id,
-            'type_sanction_id' => $this->type_sanction_id     
+            'user' => $this->user,
+            'amende' => $this->typeSanction     
         ];
     }
 }

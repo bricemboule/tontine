@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('type_sanctions', function (Blueprint $table) {
             $table->id();
             $table->string('intitule');
+            $table->string('description');
             $table->timestamps();
         });
     }

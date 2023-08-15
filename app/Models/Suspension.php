@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Suspension extends Model
 {
+    protected $fillable = [
+        'motif',
+        'periode',
+        'status',
+        'user_id',
+        'seance_id'
+    ];
+
     public function user(){
 
         return $this->belongsTo(User::class);

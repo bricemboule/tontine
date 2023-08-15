@@ -9,7 +9,16 @@ class VersementCotis extends Model
 {
     use HasFactory;
 
-    public function membre(){
+    protected $fillable = [
+        'montant',
+	'modeVersement',
+	'couponVersement',
+	'user_id',
+	'seance_id', 
+	'tontine_id'
+    ];
+
+    public function user(){
 
         return $this->belongsTo(User::class);
     }

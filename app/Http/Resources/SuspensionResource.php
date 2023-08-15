@@ -20,7 +20,8 @@ class SuspensionResource extends JsonResource
             'motif' =>$this->motif,
             'periode' =>$this->periode,
             'membre' => $this->user,
-            'seance' => $this->seance
+            'seance' => $this->seance,
+            'status' => $this->status
         ];
     }
 }

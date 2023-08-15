@@ -19,9 +19,9 @@ class VersementCotisResource extends JsonResource
             'montant' => $this->montant,
             'modeVersement' => $this->modeVersement,
             'couponVersement' => $this->couponVersement,
-            'user_id' => $this->user_id,
-            'seance_id' => $this->seance_id,
-            'tontine_id' =>$this->tontine_id
+            'user' => $this->user,
+            'seance' => $this->seance,
+            'tontine' =>$this->tontine
         ];
     }
 }

@@ -97,12 +97,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, "role_users", "user_id", "role_id")->withPivot("dateDebut", "dateFinPrevue", "dateFinEffective");
     }
 
-
     public function permissions(){
 
         return $this->belongsTo(Permisson::class, "permission_user", "user_id", "permission_id");
     }
-
 
     public function evenements(){
 
@@ -134,7 +132,6 @@ class User extends Authenticatable
     }
 
     public function retraits(){
-
         return $this->hasMany(Retrait::class);
     }
 

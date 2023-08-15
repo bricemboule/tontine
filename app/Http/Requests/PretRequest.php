@@ -27,7 +27,7 @@ class PretRequest extends FormRequest
        
         return [
             'montant' => 'required',
-            'observations' => 'required',
+            'observation' => 'required',
             'pourcentage' => 'required',
             'seance' => 'required',
             'membre' => 'required'

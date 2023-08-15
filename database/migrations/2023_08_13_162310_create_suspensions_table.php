@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('motif');
             $table->string('periode');
+            $table->boolean('status')->default(0);
             $table->foreignId('user_id')
                   ->constrained()
                   ->onUpdate('cascade')
@@ -34,7 +35,7 @@ return new class extends Migration
     {
         Schema::table('suspensions',function(Blueprint $table){
 
-            $table->dropColumn("user_id");
+            $table->dropColumn(["user_id","seance_id"]);
         });
         Schema::dropIfExists('suspensions');
     }

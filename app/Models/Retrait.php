@@ -12,11 +12,12 @@ class Retrait extends Model
         'montant',
         'intitule',
         'user_id',
-        'seance_id'
+        'seance_id',
+        'type_seance_id'
     ];
     use HasFactory;
 
-    public function membre(){
+    public function user(){
         return $this->belongsTo(User::class);
     }
 

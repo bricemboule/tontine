@@ -20,7 +20,7 @@ class DepenseResource extends JsonResource
                 'montant' => $this->montant,
                 'raison' => $this->raison,
                 'observation' => $this->observation,
-                'seance_id'=>$this->seance_id
+                'seance'=>$this->seance
 
                 ];
     }

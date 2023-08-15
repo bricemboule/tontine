@@ -20,8 +20,8 @@ class PretResource extends JsonResource
                 'montant' => $this->montant,
                 'observation' =>$this->observation,
                 'pourcentage' => $this->pourcentage,
-                'user_id' => $this->user_id,
-                'seance_id' => $this->seance_id
+                'user' => $this->user,
+                'seance' => $this->seance
         ];
     }
 }

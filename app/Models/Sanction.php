@@ -11,4 +11,11 @@ class Sanction extends Model
 
         return $this->belongsTo(TypeSanction::class);
     }
+
+    public function user(){
+
+        return $this->belongsTo(User::class);
+    }
 }
+
+

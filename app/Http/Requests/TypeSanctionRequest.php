@@ -24,7 +24,7 @@ class TypeSanctionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'intitule' => 'required|unique:type_sanctions,intitule'
+            'intitule' => 'required'
         ];
     }
 
@@ -33,7 +33,6 @@ class TypeSanctionRequest extends FormRequest
         return [
 
             'intitule.required' => 'Vous devez entrer l\'intitulé de la sanction',
-            'intitule.unique' => 'Cette sanction existe déjà dans la base de donnée'
         ];
     }
 

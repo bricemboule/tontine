@@ -9,6 +9,7 @@ use App\Http\Resources\SanctionResource;
 use App\Models\TypeSanction;
 use App\Models\Sanction;
 use App\Models\User;
+use Exception;
 
 class SanctionController extends Controller
 {
@@ -44,7 +45,7 @@ class SanctionController extends Controller
 
         } catch (Exception $e) {
             
-            return respons()->json($e);
+            return response()->json($e);
         }
     }
 
@@ -69,7 +70,7 @@ class SanctionController extends Controller
 
         } catch (Exception $e) {
             
-            return respons()->json($e);
+            return response()->json($e);
         }
     }
 
