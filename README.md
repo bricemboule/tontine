@@ -9,9 +9,15 @@ Application SaaS de gestion de tontines.
 - Tâches : Celery, Redis
 - Stockage local : MinIO
 
+## Structure du dépôt
+
+- `Frontend/` — application React (Vite, Tailwind). **Toutes les commandes `npm run` s'exécutent depuis ce dossier.**
+- `backend/` — API FastAPI (Python).
+- `docker-compose.yml`, `.env` — à la racine.
+
 ## Lancer en développement
 
-Préparer l'environnement :
+Préparer l'environnement (à la racine) :
 
 ```bash
 cp .env.example .env
@@ -19,15 +25,11 @@ cp .env.example .env
 
 Définir au minimum `SECRET_KEY` dans `.env`.
 
-Lancer les services de base :
+Lancer les services de base puis le frontend Vite (depuis `Frontend/`) :
 
 ```bash
+cd Frontend
 npm run db:up
-```
-
-Lancer le frontend Vite :
-
-```bash
 npm run dev
 ```
 
@@ -52,6 +54,8 @@ Accès :
 - MinIO : http://localhost:9001
 
 ## Tests et validation
+
+Depuis `Frontend/` :
 
 ```bash
 npm run test:backend
@@ -81,8 +85,6 @@ La documentation se trouve dans `documentation/` :
 
 ## Règles de contribution
 
-- Ne pas ajouter de logique métier dans `backend/saas_mvp.py` ou `backend/app/api/legacy.py`.
-- Ne pas ajouter de nouveaux schémas métier dans `backend/mvp_schemas.py` ou `backend/app/api/legacy_schemas.py`.
-- Placer les routes, services, repositories et schémas dans le module métier concerné.
+- Placer les routes, services, repositories et schémas dans le module métier concerné (`backend/app/modules/<module>/`).
 - Contrôler les accès côté backend, jamais seulement côté frontend.
 - Vérifier les tests et le build après chaque migration.

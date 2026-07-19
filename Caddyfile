@@ -1,0 +1,23 @@
+# Caddy — terminaison TLS automatique (Let's Encrypt) + reverse proxy.
+# Le domaine et l'email ACME viennent de docker-compose.prod.yml (env).
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode gzip zstd
+
+	# Tout est servi par le frontend (nginx), qui sert le SPA statique et
+	# relaie lui-même /api/* et /webhooks/* vers l'API. Caddy ne fait que
+	# le TLS et transmet la vraie IP client (X-Forwarded-For).
+	reverse_proxy frontend:80
+
+	header {
+		# Durcissement basique
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

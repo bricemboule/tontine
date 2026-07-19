@@ -192,10 +192,13 @@ async def validate_member(db: AsyncSession, member_id: int, new_status: str, val
     )).mappings().one_or_none()
     if not member:
         return None
+    # :status est casté en VARCHAR pour lever l'ambiguïté de type asyncpg : le
+    # même paramètre servait à la fois en affectation (status = ...) et en
+    # comparaison (... = 'active'), d'où « inconsistent types deduced ».
     await db.execute(text("""
         UPDATE members
-        SET status = :status,
-            joined_at = CASE WHEN :status = 'active' THEN COALESCE(joined_at, CURRENT_DATE) ELSE joined_at END,
+        SET status = CAST(:status AS VARCHAR),
+            joined_at = CASE WHEN CAST(:status AS VARCHAR) = 'active' THEN COALESCE(joined_at, CURRENT_DATE) ELSE joined_at END,
             validated_by = :by,
             validated_at = NOW(),
             updated_at = NOW()
@@ -206,7 +209,9 @@ async def validate_member(db: AsyncSession, member_id: int, new_status: str, val
 
 async def update_central_member_status(central: AsyncSession, ctx: dict, user_id: int, status: str) -> None:
     await central.execute(text("""
-        UPDATE tontine_members SET status = :status, joined_at = CASE WHEN :status = 'active' THEN NOW() ELSE joined_at END
+        UPDATE tontine_members
+        SET status = CAST(:status AS VARCHAR),
+            joined_at = CASE WHEN CAST(:status AS VARCHAR) = 'active' THEN NOW() ELSE joined_at END
         WHERE user_id = :uid AND tontine_id = :tid
     """), {"status": status, "uid": user_id, "tid": ctx["tontine_id"]})
 

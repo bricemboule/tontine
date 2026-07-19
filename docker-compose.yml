@@ -136,7 +136,7 @@ services:
     container_name: tontineos_frontend
     working_dir: /app
     volumes:
-      - ./:/app
+      - ./Frontend:/app
       - /app/node_modules
     ports:
       - "5173:5173"

@@ -1,0 +1,137 @@
+# ════════════════════════════════════════════════════════════════
+# Production — 1 VPS + Docker Compose + Caddy (HTTPS automatique)
+#
+#   Lancer :  docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+#
+# Seul Caddy est exposé (80/443). Postgres, Redis, MinIO, l'API et le
+# frontend restent sur le réseau interne.
+# ════════════════════════════════════════════════════════════════
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB:       ${POSTGRES_DB:-tontine_central}
+      POSTGRES_USER:     ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    restart: always
+    environment:
+      MINIO_ROOT_USER:     ${AWS_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:?Definir AWS_SECRET_ACCESS_KEY}
+    command: server /data
+    volumes:
+      - miniodata:/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      DATABASE_URL:          postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB:-tontine_central}
+      REDIS_URL:             redis://redis:6379/0
+      SECRET_KEY:            ${SECRET_KEY:?Definir SECRET_KEY — openssl rand -hex 32}
+      ENVIRONMENT:           production
+      ENABLE_DEMO_DATA:      "false"
+      API_BASE_URL:          https://${DOMAIN}
+      GOOGLE_CLIENT_ID:      ${GOOGLE_CLIENT_ID:-}
+      MTN_API_KEY:           ${MTN_API_KEY:-}
+      MTN_API_USER:          ${MTN_API_USER:-}
+      MTN_API_SECRET:        ${MTN_API_SECRET:-}
+      MTN_WEBHOOK_SECRET:    ${MTN_WEBHOOK_SECRET:-}
+      ORANGE_CLIENT_ID:      ${ORANGE_CLIENT_ID:-}
+      ORANGE_CLIENT_SECRET:  ${ORANGE_CLIENT_SECRET:-}
+      ORANGE_MERCHANT_KEY:   ${ORANGE_MERCHANT_KEY:-}
+      ORANGE_WEBHOOK_SECRET: ${ORANGE_WEBHOOK_SECRET:-}
+      AT_USERNAME:           ${AT_USERNAME:-sandbox}
+      AT_API_KEY:            ${AT_API_KEY:-}
+      SMTP_HOST:             ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT:             ${SMTP_PORT:-587}
+      SMTP_USER:             ${SMTP_USER:-}
+      SMTP_PASSWORD:         ${SMTP_PASSWORD:-}
+      SMTP_FROM:             ${SMTP_FROM:-noreply@${DOMAIN}}
+      S3_BUCKET:             ${S3_BUCKET:-tontineos}
+      S3_ENDPOINT:           http://minio:9000
+      AWS_ACCESS_KEY_ID:     ${AWS_ACCESS_KEY_ID:-minioadmin}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis:    { condition: service_healthy }
+    # --proxy-headers : uvicorn lit X-Forwarded-For (vraie IP client derrière Caddy/nginx,
+    # important pour le rate-limiter). Processus unique : les migrations de démarrage
+    # (idempotentes) s'exécutent une seule fois.
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips="*"
+
+  worker:
+    build: { context: ./backend, dockerfile: Dockerfile }
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB:-tontine_central}
+      REDIS_URL:    redis://redis:6379/0
+      SECRET_KEY:   ${SECRET_KEY}
+      ENVIRONMENT:  production
+    depends_on: [api, redis]
+    command: celery -A tasks worker --loglevel=info --concurrency=4
+
+  beat:
+    build: { context: ./backend, dockerfile: Dockerfile }
+    restart: always
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB:-tontine_central}
+      REDIS_URL:    redis://redis:6379/0
+      SECRET_KEY:   ${SECRET_KEY}
+      ENVIRONMENT:  production
+    depends_on: [worker]
+    command: celery -A tasks beat --loglevel=info
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+    restart: always
+    depends_on: [api]
+
+  caddy:
+    image: caddy:2.8-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN:     "${DOMAIN:?Definir DOMAIN, ex app.matontine.cm}"
+      ACME_EMAIL: "${ACME_EMAIL:-admin@${DOMAIN}}"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [frontend, api]
+
+volumes:
+  pgdata:
+  miniodata:
+  caddy_data:
+  caddy_config:
