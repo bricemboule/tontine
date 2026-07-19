@@ -1,0 +1,130 @@
+/* ════════════════════════════════════════════════════════════════
+   TontineOS — Design System · Tokens
+   Source de vérité unique. Consommé par tailwind.config.js et les
+   primitives. Ne jamais écrire de couleur en dur dans un composant.
+   Direction validée : marque indigo unique, thème clair d'abord,
+   tokens « dark-ready ».
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Indigo — marque ─────────────────────────────── */
+  --indigo-50:  #F5F3FF;
+  --indigo-100: #EDE9FE;
+  --indigo-200: #DDD6FE;
+  --indigo-300: #C4B5FD;
+  --indigo-400: #A78BFA;
+  --indigo-500: #8B5CF6;
+  --indigo-600: #7C3AED;
+  --indigo-700: #6D28D9;
+  --indigo-800: #5B21B6;
+  --indigo-900: #4C1D95;
+
+  /* ── Neutres (biaisés indigo) ────────────────────── */
+  --neutral-50:  #FAF9FC;
+  --neutral-100: #F4F2F8;
+  --neutral-200: #E9E6F0;
+  --neutral-300: #D6D2E1;
+  --neutral-400: #A9A3B9;
+  --neutral-500: #7C7691;
+  --neutral-600: #5C5670;
+  --neutral-700: #423D54;
+  --neutral-800: #2A2637;
+  --neutral-900: #191622;
+
+  /* ── Sémantique (distincte de l'accent) ──────────── */
+  --success: #16A34A; --success-soft: #E7F7ED; --success-border: #B7E9C6;
+  --warning: #D97706; --warning-soft: #FDF3E3; --warning-border: #F6DCA8;
+  --danger:  #DC2626; --danger-soft:  #FCEBEB; --danger-border:  #F3BFBF;
+  --info:    #2563EB; --info-soft:    #E9F0FE; --info-border:    #BFD3F8;
+
+  /* ── Tokens applicatifs — thème clair ────────────── */
+  --ground:      #F7F6FB;
+  --surface:     #FFFFFF;
+  --surface-2:   #FAF9FC;
+  --border:      #E9E6F0;
+  --border-soft: #F1EFF6;
+  --text:        #191622;
+  --text-muted:  #5C5670;
+  --text-subtle: #8E88A0;
+
+  --primary:        var(--indigo-600);
+  --primary-strong: var(--indigo-700);
+  --primary-soft:   var(--indigo-50);
+  --primary-softer: var(--indigo-100);
+  --on-primary:     #FFFFFF;
+
+  --ring: rgba(124, 58, 237, .32);
+
+  --shadow-sm: 0 1px 2px rgba(25, 22, 34, .06), 0 1px 3px rgba(25, 22, 34, .04);
+  --shadow-md: 0 4px 12px rgba(25, 22, 34, .07), 0 2px 6px rgba(25, 22, 34, .04);
+  --shadow-lg: 0 18px 48px rgba(76, 29, 149, .14);
+
+  /* ── Rayons ──────────────────────────────────────── */
+  --r-sm: 7px; --r-md: 10px; --r-lg: 14px; --r-xl: 20px; --r-full: 999px;
+
+  /* ── Polices ─────────────────────────────────────── */
+  --font-display: "Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body:    "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ── Thème sombre — via préférence système ─────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground:      #0F0B16;
+    --surface:     #1A1524;
+    --surface-2:   #221B30;
+    --border:      #2E2740;
+    --border-soft: #241E33;
+    --text:        #EDEAF6;
+    --text-muted:  #A9A2BF;
+    --text-subtle: #7C7592;
+
+    --primary:        var(--indigo-500);
+    --primary-strong: var(--indigo-400);
+    --primary-soft:   rgba(124, 58, 237, .16);
+    --primary-softer: rgba(124, 58, 237, .24);
+    --ring: rgba(167, 139, 250, .40);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow-md: 0 4px 14px rgba(0, 0, 0, .45);
+    --shadow-lg: 0 18px 48px rgba(0, 0, 0, .55);
+
+    --success-soft: rgba(22, 163, 74, .16); --success-border: rgba(22, 163, 74, .40);
+    --warning-soft: rgba(217, 119, 6, .16); --warning-border: rgba(217, 119, 6, .40);
+    --danger-soft:  rgba(220, 38, 38, .16); --danger-border:  rgba(220, 38, 38, .40);
+    --info-soft:    rgba(37, 99, 235, .16); --info-border:    rgba(37, 99, 235, .40);
+  }
+}
+
+/* ── Overrides explicites (le toggle applicatif gagne
+      sur la préférence système, dans les deux sens) ── */
+:root[data-theme="dark"] {
+  --ground:#0F0B16; --surface:#1A1524; --surface-2:#221B30;
+  --border:#2E2740; --border-soft:#241E33;
+  --text:#EDEAF6; --text-muted:#A9A2BF; --text-subtle:#7C7592;
+  --primary:var(--indigo-500); --primary-strong:var(--indigo-400);
+  --primary-soft:rgba(124,58,237,.16); --primary-softer:rgba(124,58,237,.24);
+  --ring:rgba(167,139,250,.40);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow-md:0 4px 14px rgba(0,0,0,.45);
+  --shadow-lg:0 18px 48px rgba(0,0,0,.55);
+  --success-soft:rgba(22,163,74,.16); --success-border:rgba(22,163,74,.4);
+  --warning-soft:rgba(217,119,6,.16); --warning-border:rgba(217,119,6,.4);
+  --danger-soft:rgba(220,38,38,.16); --danger-border:rgba(220,38,38,.4);
+  --info-soft:rgba(37,99,235,.16); --info-border:rgba(37,99,235,.4);
+}
+:root[data-theme="light"] {
+  --ground:#F7F6FB; --surface:#FFFFFF; --surface-2:#FAF9FC;
+  --border:#E9E6F0; --border-soft:#F1EFF6;
+  --text:#191622; --text-muted:#5C5670; --text-subtle:#8E88A0;
+  --primary:var(--indigo-600); --primary-strong:var(--indigo-700);
+  --primary-soft:var(--indigo-50); --primary-softer:var(--indigo-100);
+  --ring:rgba(124,58,237,.32);
+  --shadow-sm:0 1px 2px rgba(25,22,34,.06),0 1px 3px rgba(25,22,34,.04);
+  --shadow-md:0 4px 12px rgba(25,22,34,.07),0 2px 6px rgba(25,22,34,.04);
+  --shadow-lg:0 18px 48px rgba(76,29,149,.14);
+  --success-soft:#E7F7ED; --success-border:#B7E9C6;
+  --warning-soft:#FDF3E3; --warning-border:#F6DCA8;
+  --danger-soft:#FCEBEB; --danger-border:#F3BFBF;
+  --info-soft:#E9F0FE; --info-border:#BFD3F8;
+}

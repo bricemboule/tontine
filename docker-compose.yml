@@ -1,0 +1,153 @@
+# ════════════════════════════════════════════════════════════════
+# TontineOS — Stack complète Docker
+# Lancer : docker compose up -d
+# Docs API : http://localhost:8000/docs
+# Frontend : http://localhost:5173
+# ════════════════════════════════════════════════════════════════
+
+services:
+
+  # ── Base de données PostgreSQL ──────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: tontineos_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       tontine_central
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis (cache + broker Celery) ───────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: tontineos_redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Backend FastAPI ─────────────────────────────────────────
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tontineos_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL:         postgresql+asyncpg://postgres:postgres@postgres/tontine_central
+      REDIS_URL:            redis://redis:6379/0
+      SECRET_KEY:           ${SECRET_KEY:?Definir SECRET_KEY dans .env — openssl rand -hex 32}
+      ENVIRONMENT:          ${ENVIRONMENT:-development}
+      ENABLE_DEMO_DATA:     ${ENABLE_DEMO_DATA:-false}
+      MTN_WEBHOOK_SECRET:   ${MTN_WEBHOOK_SECRET:-}
+      API_BASE_URL:         ${API_BASE_URL:-http://localhost:8000}
+      ORANGE_CLIENT_ID:     ${ORANGE_CLIENT_ID:-}
+      ORANGE_CLIENT_SECRET: ${ORANGE_CLIENT_SECRET:-}
+      ORANGE_MERCHANT_KEY:  ${ORANGE_MERCHANT_KEY:-}
+      ORANGE_WEBHOOK_SECRET: ${ORANGE_WEBHOOK_SECRET:-}
+      GOOGLE_CLIENT_ID:     ${GOOGLE_CLIENT_ID:-}
+      MTN_API_KEY:          ${MTN_API_KEY:-}
+      MTN_API_USER:         ${MTN_API_USER:-}
+      MTN_API_SECRET:       ${MTN_API_SECRET:-}
+      AT_USERNAME:          ${AT_USERNAME:-sandbox}
+      AT_API_KEY:           ${AT_API_KEY:-}
+      SMTP_HOST:            ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT:            ${SMTP_PORT:-587}
+      SMTP_USER:            ${SMTP_USER:-}
+      SMTP_PASSWORD:        ${SMTP_PASSWORD:-}
+      SMTP_FROM:            ${SMTP_FROM:-noreply@tontineos.cm}
+      S3_BUCKET:            ${S3_BUCKET:-tontineos}
+      S3_ENDPOINT:          ${S3_ENDPOINT:-http://minio:9000}
+      AWS_ACCESS_KEY_ID:    ${AWS_ACCESS_KEY_ID:-minioadmin}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-minioadmin}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ── Worker Celery (tâches planifiées) ───────────────────────
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tontineos_worker
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres/tontine_central
+      REDIS_URL:    redis://redis:6379/0
+    depends_on:
+      - api
+      - redis
+    command: celery -A tasks worker --loglevel=info --concurrency=4
+
+  # ── Celery Beat (planificateur) ─────────────────────────────
+  beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tontineos_beat
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres/tontine_central
+      REDIS_URL:    redis://redis:6379/0
+    depends_on:
+      - worker
+    command: celery -A tasks beat --loglevel=info
+
+  # ── MinIO (stockage reçus PDF, exports) ─────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: tontineos_minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER:     minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  # ── Frontend React (dev) ─────────────────────────────────────
+  frontend:
+    image: node:20-alpine
+    container_name: tontineos_frontend
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_PROXY_TARGET=http://api:8000
+      - VITE_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  miniodata:
