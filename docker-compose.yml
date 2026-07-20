@@ -54,6 +54,9 @@ services:
       SECRET_KEY:           ${SECRET_KEY:?Definir SECRET_KEY dans .env — openssl rand -hex 32}
       ENVIRONMENT:          ${ENVIRONMENT:-development}
       ENABLE_DEMO_DATA:     ${ENABLE_DEMO_DATA:-false}
+      BOOTSTRAP_ADMIN_EMAIL:    ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+      BOOTSTRAP_ADMIN_NAME:     ${BOOTSTRAP_ADMIN_NAME:-Super Admin}
       MTN_WEBHOOK_SECRET:   ${MTN_WEBHOOK_SECRET:-}
       API_BASE_URL:         ${API_BASE_URL:-http://localhost:8000}
       ORANGE_CLIENT_ID:     ${ORANGE_CLIENT_ID:-}
