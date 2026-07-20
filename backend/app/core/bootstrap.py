@@ -3,7 +3,14 @@ import logging
 from sqlalchemy import text
 
 from app.common.tenant_schema import ensure_tenant_schema, quote_schema, tenant_sql
-from app.core.config import ENABLE_DEMO_DATA, ENVIRONMENT
+from app.core.config import (
+    BOOTSTRAP_ADMIN_EMAIL,
+    BOOTSTRAP_ADMIN_NAME,
+    BOOTSTRAP_ADMIN_PASSWORD,
+    BOOTSTRAP_ADMIN_PHONE,
+    ENABLE_DEMO_DATA,
+    ENVIRONMENT,
+)
 from app.core.database import TENANT_RE, get_central_engine
 from app.core.security import hash_password
 
@@ -155,6 +162,45 @@ async def ensure_saas_schema() -> None:
         await seed_demo_data()
     else:
         logger.info("Seed des donnees demo ignore (ENABLE_DEMO_DATA=false)")
+
+    # Super-admin d'amorçage (tous environnements) — idempotent.
+    await ensure_bootstrap_admin()
+
+
+async def ensure_bootstrap_admin() -> None:
+    """Crée le super-administrateur d'amorçage si BOOTSTRAP_ADMIN_EMAIL et
+    BOOTSTRAP_ADMIN_PASSWORD sont définis. Idempotent : ne touche pas à un
+    compte existant (ON CONFLICT DO NOTHING), donc sûr à chaque démarrage."""
+    email = (BOOTSTRAP_ADMIN_EMAIL or "").strip().lower()
+    password = BOOTSTRAP_ADMIN_PASSWORD or ""
+    if not email or not password:
+        logger.info("Super-admin d'amorcage ignore (BOOTSTRAP_ADMIN_EMAIL/PASSWORD non definis)")
+        return
+
+    parts = (BOOTSTRAP_ADMIN_NAME or "Super Admin").split(" ", 1)
+    first = parts[0] or "Super"
+    last = parts[1] if len(parts) > 1 else "Admin"
+
+    engine = get_central_engine()
+    async with engine.begin() as conn:
+        inserted = (await conn.execute(text("""
+            INSERT INTO users (email, phone, hashed_password, first_name, last_name,
+                               global_role, is_active, is_verified)
+            VALUES (:email, :phone, :pwd, :first, :last, 'superadmin', true, true)
+            ON CONFLICT (email) DO NOTHING
+            RETURNING id
+        """), {
+            "email": email,
+            "phone": BOOTSTRAP_ADMIN_PHONE or "+000000000",
+            "pwd": hash_password(password),
+            "first": first,
+            "last": last,
+        })).scalar_one_or_none()
+
+    if inserted is not None:
+        logger.info("Super-admin d'amorcage cree : %s", email)
+    else:
+        logger.info("Super-admin d'amorcage deja present : %s", email)
 
 
 async def ensure_tenant_schema(schema: str) -> None:

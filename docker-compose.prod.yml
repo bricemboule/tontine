@@ -56,6 +56,10 @@ services:
       ENVIRONMENT:           production
       ENABLE_DEMO_DATA:      "false"
       API_BASE_URL:          https://${DOMAIN}
+      # Super-admin créé au 1er démarrage (idempotent) si renseigné.
+      BOOTSTRAP_ADMIN_EMAIL:    "${BOOTSTRAP_ADMIN_EMAIL:-}"
+      BOOTSTRAP_ADMIN_PASSWORD: "${BOOTSTRAP_ADMIN_PASSWORD:-}"
+      BOOTSTRAP_ADMIN_NAME:     "${BOOTSTRAP_ADMIN_NAME:-Super Admin}"
       GOOGLE_CLIENT_ID:      ${GOOGLE_CLIENT_ID:-}
       MTN_API_KEY:           ${MTN_API_KEY:-}
       MTN_API_USER:          ${MTN_API_USER:-}

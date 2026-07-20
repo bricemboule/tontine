@@ -38,6 +38,14 @@ REFRESH_TOKEN_TTL = env_int("REFRESH_TOKEN_TTL", 7)
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 ENABLE_DEMO_DATA = env_bool("ENABLE_DEMO_DATA", False)
 
+# Super-administrateur d'amorçage : créé au démarrage (idempotent) si l'email ET
+# le mot de passe sont fournis. Permet d'avoir un compte prêt au 1er déploiement
+# sans identifiants codés en dur — c'est l'opérateur qui choisit le mot de passe.
+BOOTSTRAP_ADMIN_EMAIL = os.getenv("BOOTSTRAP_ADMIN_EMAIL", "")
+BOOTSTRAP_ADMIN_PASSWORD = os.getenv("BOOTSTRAP_ADMIN_PASSWORD", "")
+BOOTSTRAP_ADMIN_NAME = os.getenv("BOOTSTRAP_ADMIN_NAME", "Super Admin")
+BOOTSTRAP_ADMIN_PHONE = os.getenv("BOOTSTRAP_ADMIN_PHONE", "+000000000")
+
 REDIS_URL = os.getenv("REDIS_URL", "memory://")
 CELERY_REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 ORANGE_WEBHOOK_SECRET = os.getenv("ORANGE_WEBHOOK_SECRET", "")

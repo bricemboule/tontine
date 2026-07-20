@@ -38,36 +38,20 @@ docker compose -f docker-compose.prod.yml logs -f caddy   # voit l'émission du 
 
 Caddy obtient automatiquement le certificat Let's Encrypt. Ouvrir **https://votre-domaine**.
 
-## 5. Créer le premier super-administrateur
+## 5. Premier super-administrateur
 
-En production `ENABLE_DEMO_DATA=false` : aucun compte n'existe. Créer le super-admin (adapter email / mot de passe) :
+Il est **créé automatiquement au 1er démarrage** à partir de `.env.production` :
 
-```bash
-docker compose -f docker-compose.prod.yml exec api python - <<'PY'
-import asyncio
-from sqlalchemy import text
-from app.core.database import get_central_engine
-from app.core.security import hash_password
-
-EMAIL = "admin@exemple.cm"
-PASSWORD = "ChangeMoi!"   # à modifier immédiatement après connexion
-
-async def main():
-    eng = get_central_engine()
-    async with eng.begin() as c:
-        await c.execute(text("""
-            INSERT INTO users (email, phone, hashed_password, first_name, last_name,
-                               global_role, is_active, is_verified)
-            VALUES (:e, '+000000000', :p, 'Super', 'Admin', 'superadmin', true, true)
-            ON CONFLICT (email) DO NOTHING
-        """), {"e": EMAIL, "p": hash_password(PASSWORD)})
-    print("super-admin créé :", EMAIL)
-
-asyncio.run(main())
-PY
+```
+BOOTSTRAP_ADMIN_EMAIL=admin@exemple.cm
+BOOTSTRAP_ADMIN_PASSWORD=un_mot_de_passe_fort
 ```
 
-Se connecter, puis créer les organisations / tontines / admins depuis l'espace super-admin.
+C'est **idempotent** : au redémarrage, un compte déjà présent n'est jamais modifié
+(aucun écrasement de mot de passe). Laisser ces variables vides désactive la création.
+
+Connecte-toi avec ces identifiants, **change le mot de passe**, puis crée les
+organisations / tontines / admins depuis l'espace super-admin.
 
 ## 6. Sauvegardes
 
