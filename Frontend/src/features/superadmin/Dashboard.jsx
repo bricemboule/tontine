@@ -19,6 +19,7 @@ export default function SuperAdminDashboard() {
   const [stats, setStats] = useState(null);
   const [tontines, setT]  = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [orgs, setOrgs]   = useState([]);
 
   const path = location.pathname.replace("/superadmin/", "").replace("/superadmin", "").split("/")[0];
   const nav = path || "dashboard";
@@ -28,6 +29,7 @@ export default function SuperAdminDashboard() {
     api.getPlatformStats().then(setStats).catch(()=>{});
     api.getTontines().then(setT).catch(()=>{});
     api.getAdmins().then(setAdmins).catch(()=>{});
+    api.getOrganizations().then(setOrgs).catch(()=>{});
   }, []);
 
   const navItems = SUPERADMIN_NAV.map(n => ({
@@ -36,7 +38,7 @@ export default function SuperAdminDashboard() {
   }));
 
   const pages = {
-    dashboard: <SuperadminHomeMock stats={stats} />,
+    dashboard: <SuperadminHomeMock stats={stats} tontines={tontines} organizations={orgs} />,
     organizations: <OrganizationsPage api={api} toast={toast} />,
     admins: <AdminsTab api={api} toast={toast} onAdminsChange={setAdmins} />,
     tontines: <TontinesTab api={api} toast={toast} onTontinesChange={setT} onOpenAdmins={() => setNav("admins")} />,
