@@ -221,9 +221,22 @@ async def creer_tontine(
     if await repository.tontine_assignee_admin(db, req.admin_user_id):
         raise HTTPException(409, "Cet administrateur gère déjà une tontine")
 
+    # Une tontine appartient toujours à une organisation (compte client du SaaS).
+    # Si aucune n'existe encore, on en crée une par défaut au lieu de bloquer :
+    # l'admin n'a pas à passer par l'étape « organisation » manuellement.
     org_id = req.organization_id or await repository.premiere_organisation_id(db)
     if not org_id:
-        raise HTTPException(422, "Créez d'abord une organisation")
+        org = await repository.creer_organisation(db, {
+            "name": req.name,
+            "slug": f"{slugify(req.name)}-{uuid.uuid4().hex[:6]}",
+            "logo": None,
+            "phone": None,
+            "email": None,
+            "city": None,
+            "country": "Cameroun",
+            "address": None,
+        })
+        org_id = org["id"]
 
     slug = await _slug_tontine_unique(db, req.name)
     schema_name = f"tontine_{slug}"

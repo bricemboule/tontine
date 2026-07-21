@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className="tos-footer">
-      <span>TontineOS</span>
+      <span>Tontine</span>
       <span>Gestion des tontines multi-rôles</span>
     </footer>
   );

@@ -184,7 +184,7 @@ async def creer_tontine_registry(db: AsyncSession, values: dict):
             organization_id, name, slug, schema_name, type, status, currency,
             created_by, description, contribution_amount, frequency, start_date, end_date, max_members
         )
-        VALUES (:org, :name, :slug, :schema, :type, 'draft', 'XAF',
+        VALUES (:org, :name, :slug, :schema, :type, 'active', 'XAF',
                 :by, :description, :amount, :frequency, :start, :end, :max_members)
         RETURNING *
     """), values)).mappings().one()

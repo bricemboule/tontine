@@ -20,6 +20,7 @@ export default [
         FormData: "readonly",
         URL: "readonly",
         fetch: "readonly",
+        navigator: "readonly",
         console: "readonly",
         alert: "readonly",
         confirm: "readonly",

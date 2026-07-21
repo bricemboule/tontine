@@ -11,7 +11,7 @@ export default function AdminLayout(props) {
     <Layout
       {...props}
       user={user}
-      brand={props.tontineName || "TontineOS"}
+      brand={props.tontineName || "Tontine"}
       onLogout={logout}
     />
   );

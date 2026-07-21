@@ -1,12 +1,20 @@
 import {
-  LayoutDashboard, Users, Coins, HandCoins, CreditCard, Wallet,
-  CalendarDays, Scale, Repeat, FileBarChart, ReceiptText, Bell,
-  Settings, Building2, Circle,
+  LayoutDashboard,
+  Users,
+  Coins,
+  HandCoins,
+  CreditCard,
+  Wallet,
+  CalendarDays,
+  Scale,
+  Repeat,
+  FileBarChart,
+  ReceiptText,
+  Bell,
+  Settings,
+  Building2,
+  Circle,
 } from "lucide-react";
-
-/* Sidebar unifiée. Les icônes sont mappées par `id` de navigation
-   (lucide-react) — plus de glyphes Unicode, et aucune modification
-   requise dans les 7 Dashboard.jsx par rôle. */
 
 const ROLE_LABELS = {
   superadmin: "Directeur général",
@@ -22,14 +30,22 @@ const NAV_ICONS = {
   "": LayoutDashboard,
   dashboard: LayoutDashboard,
   tontines: Building2,
-  membres: Users, members: Users,
-  cotisations: Coins, contributions: Coins,
-  prets: HandCoins, loans: HandCoins,
-  paiements: CreditCard, payments: CreditCard,
+  membres: Users,
+  members: Users,
+  cotisations: Coins,
+  contributions: Coins,
+  prets: HandCoins,
+  loans: HandCoins,
+  paiements: CreditCard,
+  payments: CreditCard,
   cash: Wallet,
-  reunions: CalendarDays, meetings: CalendarDays,
-  sanctions: Scale, penalties: Scale,
-  tours: Repeat, turn: Repeat, "payout-turns": Repeat,
+  reunions: CalendarDays,
+  meetings: CalendarDays,
+  sanctions: Scale,
+  penalties: Scale,
+  tours: Repeat,
+  turn: Repeat,
+  "payout-turns": Repeat,
   reports: FileBarChart,
   receipts: ReceiptText,
   notifications: Bell,
@@ -50,7 +66,11 @@ function SidebarItem({ item, active, onClick }) {
     return <div className="tos-sidebar-section">{item.section}</div>;
   }
   return (
-    <button type="button" className={`tos-nav-item ${active ? "is-active" : ""}`} onClick={onClick}>
+    <button
+      type="button"
+      className={`tos-nav-item ${active ? "is-active" : ""}`}
+      onClick={onClick}
+    >
       <NavIcon id={item.id} />
       <span className="tos-nav-label">{item.label}</span>
       {item.badge ? <span className="tos-nav-badge">{item.badge}</span> : null}
@@ -59,7 +79,11 @@ function SidebarItem({ item, active, onClick }) {
 }
 
 export default function Sidebar({ brand, navItems, activeNav, onNav, user }) {
-  const initial = (user?.first_name?.[0] || user?.name?.[0] || "T").toUpperCase();
+  const initial = (
+    user?.first_name?.[0] ||
+    user?.name?.[0] ||
+    "T"
+  ).toUpperCase();
   const roleLabel = ROLE_LABELS[user?.role] || user?.role;
 
   return (
@@ -86,7 +110,9 @@ export default function Sidebar({ brand, navItems, activeNav, onNav, user }) {
       </nav>
 
       <div className="tos-sidebar-user">
-        <div className="tos-user-avatar" aria-hidden="true">{initial}</div>
+        <div className="tos-user-avatar" aria-hidden="true">
+          {initial}
+        </div>
         <div className="tos-user-meta">
           <strong>{user?.name || "Utilisateur"}</strong>
           {roleLabel && <span className="tos-role-badge">{roleLabel}</span>}

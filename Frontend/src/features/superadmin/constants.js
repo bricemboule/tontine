@@ -1,6 +1,5 @@
 export const SUPERADMIN_NAV = [
   { id: "dashboard", label: "Vue d'ensemble", icon: "◈" },
-  { id: "organizations", label: "Organisations", icon: "▣" },
   { id: "admins", label: "Administrateurs", icon: "◉" },
   { id: "tontines", label: "Tontines", icon: "⬡" },
   { id: "subscriptions", label: "Abonnements", icon: "▤" },

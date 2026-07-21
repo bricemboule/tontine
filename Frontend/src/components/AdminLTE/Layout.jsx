@@ -3,10 +3,6 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 
-/* Coquille applicative unifiée — thème indigo unique (fini l'arc-en-ciel
-   par rôle), tokens du design system, DM Sans / Outfit, dark-ready.
-   Le rôle est affiché en badge par la Sidebar, plus en couleur globale. */
-
 const SHELL_CSS = `
 .tos-adminlte{
   min-height:100vh;
@@ -236,7 +232,9 @@ export default function Layout({
   return (
     <div className="tos-adminlte">
       <style>{SHELL_CSS}</style>
-      <div className={`tos-shell ${collapsed ? "is-collapsed" : ""} ${mobileOpen ? "is-mobile-open" : ""}`}>
+      <div
+        className={`tos-shell ${collapsed ? "is-collapsed" : ""} ${mobileOpen ? "is-mobile-open" : ""}`}
+      >
         <Sidebar
           brand={brand}
           navItems={navItems}
@@ -245,7 +243,11 @@ export default function Layout({
           user={user}
         />
         {mobileOpen && (
-          <button className="tos-backdrop" aria-label="Fermer le menu" onClick={() => setMobileOpen(false)} />
+          <button
+            className="tos-backdrop"
+            aria-label="Fermer le menu"
+            onClick={() => setMobileOpen(false)}
+          />
         )}
 
         <div className="tos-main">
