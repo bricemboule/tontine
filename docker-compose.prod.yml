@@ -110,6 +110,9 @@ services:
     depends_on: [worker]
     command: celery -A tasks beat --loglevel=info
 
+  # Le frontend (nginx : SPA + relais /api et /webhooks) est publié sur un port
+  # LOCAL (127.0.0.1). Le nginx de l'hôte, qui détient déjà 80/443 et les
+  # certificats TLS, proxifie tontine.<domaine> vers ce port (voir DEPLOYMENT.md).
   frontend:
     build:
       context: ./Frontend
@@ -117,25 +120,10 @@ services:
       args:
         VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
     restart: always
-    depends_on: [api]
-
-  caddy:
-    image: caddy:2.8-alpine
-    restart: always
     ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      DOMAIN:     "${DOMAIN:?Definir DOMAIN, ex app.matontine.cm}"
-      ACME_EMAIL: "${ACME_EMAIL:-admin@${DOMAIN}}"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on: [frontend, api]
+      - "127.0.0.1:${FRONTEND_PORT:-8091}:80"
+    depends_on: [api]
 
 volumes:
   pgdata:
   miniodata:
-  caddy_data:
-  caddy_config:

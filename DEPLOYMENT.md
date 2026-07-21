@@ -1,12 +1,14 @@
 # Déploiement — VPS + Docker Compose
 
-Architecture : **Caddy** (HTTPS auto) → **frontend** (nginx, SPA statique + relais `/api` et `/webhooks`) → **api** (FastAPI) + **worker/beat** (Celery) + **postgres** + **redis** + **minio**. Seul Caddy est exposé (80/443).
+Architecture : **nginx de l'hôte** (TLS + 80/443, mutualisé avec tes autres apps) → **frontend** (nginx conteneur, SPA statique + relais `/api` et `/webhooks`, publié sur `127.0.0.1:8091`) → **api** (FastAPI) + **worker/beat** (Celery) + **postgres** + **redis** + **minio**.
+
+> Le conteneur n'expose **que** `127.0.0.1:${FRONTEND_PORT:-8091}`. C'est le nginx **de l'hôte** qui termine le TLS et proxifie ton domaine vers ce port (voir `deploy/nginx-host.conf.example`). Aucun Caddy : sur un VPS où un nginx détient déjà 80/443, Caddy ne pourrait pas prendre les ports.
 
 ## 1. Prérequis
 
 - Un VPS (Ubuntu 22.04+), 2 vCPU / 4 Go conseillés.
-- Un nom de domaine dont l'enregistrement **A** pointe vers l'IP du VPS.
-- Ports **80** et **443** ouverts.
+- Un **nginx sur l'hôte** (déjà présent ici) avec un certificat pour ton domaine (Certbot).
+- Un enregistrement DNS **A** du domaine vers l'IP du VPS.
 
 ## 2. Installer Docker
 
@@ -30,13 +32,38 @@ nano .env.production
 
 ## 4. Démarrer
 
+Astuce : nomme le fichier **`.env`** (chargé automatiquement par Compose pour *toutes* les commandes — plus besoin de `--env-file`).
+
 ```bash
-docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
+mv .env.production .env
+docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml ps
-docker compose -f docker-compose.prod.yml logs -f caddy   # voit l'émission du certificat TLS
+# Le frontend répond en local :
+curl -I http://127.0.0.1:8091/login        # -> 200
 ```
 
-Caddy obtient automatiquement le certificat Let's Encrypt. Ouvrir **https://votre-domaine**.
+## 4bis. Brancher le nginx de l'hôte
+
+Le conteneur écoute sur `127.0.0.1:8091`. Dans le vhost nginx de ton domaine (celui
+qui a déjà le certificat), fais pointer `location /` vers ce port :
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:8091;
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+```
+
+Modèle complet dans `deploy/nginx-host.conf.example`. Puis :
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Ouvrir **https://ton-domaine**.
 
 ## 5. Premier super-administrateur
 

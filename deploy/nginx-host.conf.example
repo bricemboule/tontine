@@ -1,0 +1,44 @@
+# ════════════════════════════════════════════════════════════════
+# Configuration du nginx de l'HÔTE (celui qui détient déjà 80/443 et les
+# certificats), pour servir tontine.bloomarone.com et le proxifier vers le
+# conteneur frontend publié sur 127.0.0.1:8091.
+#
+# Tu as déjà HTTPS sur ce domaine → un vhost existe probablement dans
+#   /etc/nginx/sites-available/  ou  /etc/nginx/conf.d/
+# Le plus simple : dans CE vhost existant (bloc « server { listen 443 ssl ... } »
+# pour tontine.bloomarone.com), remplace le contenu de « location / { ... } »
+# par le bloc proxy ci-dessous. Sinon, utilise ce fichier complet.
+# ════════════════════════════════════════════════════════════════
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name tontine.bloomarone.com;
+    # Rediriger tout le HTTP vers HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name tontine.bloomarone.com;
+
+    # ⚠️ Adapter au chemin réel des certificats (Certbot les met souvent ici) :
+    ssl_certificate     /etc/letsencrypt/live/tontine.bloomarone.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tontine.bloomarone.com/privkey.pem;
+
+    client_max_body_size 25m;
+
+    location / {
+        proxy_pass http://127.0.0.1:8091;   # conteneur frontend (voir FRONTEND_PORT)
+        proxy_http_version 1.1;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+}
+
+# Le conteneur frontend relaie lui-même /api/* et /webhooks/* vers l'API :
+# rien d'autre à router côté nginx hôte.
