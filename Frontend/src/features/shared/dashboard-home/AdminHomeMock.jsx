@@ -1,11 +1,15 @@
-import { ACTOR_DASHBOARD_CSS, AreaChart, Donut, Hero, Kpi, Panel, Table, fmtCFA } from "./components";
+import { ACTOR_DASHBOARD_CSS, EmptyState, Hero, Kpi, Panel, StatusPill, Table, fmtCFA, fmtDate } from "./components";
 
-export function AdminHomeMock({ dashboard }) {
+export function AdminHomeMock({ dashboard, members = [], payments = [], onNav }) {
   const tone = "#16a34a";
+  const go = (id) => () => onNav?.(id);
+  const lastMembers = [...members].slice(0, 5);
+  const lastPayments = [...payments].slice(0, 5);
+
   return (
     <div className="actor-board">
       <style>{ACTOR_DASHBOARD_CSS}</style>
-      <Hero title="Bonjour, Administrateur 👋" sub="Vue d'ensemble de votre organisation" />
+      <Hero title="Bonjour, Administrateur 👋" sub="Vue d'ensemble de votre tontine" />
       <div className="actor-kpis k6">
         <Kpi icon="▥" value={dashboard?.upcoming_meetings ?? "—"} label="Réunions à venir" tone={tone} bg="#ecfdf5" />
         <Kpi icon="♣" value={dashboard?.members_count ?? "—"} label="Membres actifs" tone="#2563eb" bg="#eff6ff" />
@@ -15,33 +19,46 @@ export function AdminHomeMock({ dashboard }) {
         <Kpi icon="◷" value={dashboard?.late_contributions ?? "—"} label="Cotisations en retard" bad tone="#f97316" bg="#fff7ed" />
       </div>
       <div className="actor-grid">
-        <Panel title="Tontines actives">
-          <Table columns={["Tontine", "Membres", "Cotisation", "Fréquence", "Statut"]} rows={[
-            ["Tontine Élévation", "25", fmtCFA(10000), "Hebdomadaire", <span className="actor-status">Active</span>],
-            ["Tontine Avenir", "20", fmtCFA(15000), "Mensuelle", <span className="actor-status">Active</span>],
-            ["Tontine Progrès", "21", fmtCFA(20000), "Mensuelle", <span className="actor-status">Active</span>],
-            ["Tontine Solidarité", "20", fmtCFA(10000), "Hebdomadaire", <span className="actor-status">Active</span>],
-          ]} />
+        <Panel title="Membres récents">
+          {lastMembers.length === 0 ? (
+            <EmptyState>Aucun membre pour le moment.</EmptyState>
+          ) : (
+            <Table
+              columns={["Nom", "Rôle", "Téléphone", "Statut"]}
+              rows={lastMembers.map((m) => [
+                m.name,
+                m.role,
+                m.phone || "—",
+                <StatusPill key={m.id} status={m.status} />,
+              ])}
+            />
+          )}
         </Panel>
         <Panel title="Actions rapides">
           <div className="actor-actions">
-            <button className="actor-action" style={{ "--tone": "#16a34a" }}>+ Créer une tontine</button>
-            <button className="actor-action" style={{ "--tone": "#2563eb" }}>+ Ajouter un membre</button>
-            <button className="actor-action" style={{ "--tone": "#7c3aed" }}>▣ Enregistrer un paiement</button>
-            <button className="actor-action" style={{ "--tone": "#f97316" }}>▤ Générer un rapport</button>
+            <button className="actor-action" style={{ "--tone": "#2563eb" }} onClick={go("membres/create")}>+ Ajouter un membre</button>
+            <button className="actor-action" style={{ "--tone": "#7c3aed" }} onClick={go("paiements/create")}>▣ Enregistrer un paiement</button>
+            <button className="actor-action" style={{ "--tone": "#16a34a" }} onClick={go("cotisations/create")}>+ Nouvelle cotisation</button>
+            <button className="actor-action" style={{ "--tone": "#f97316" }} onClick={go("reports")}>▤ Générer un rapport</button>
           </div>
         </Panel>
       </div>
-      <div className="actor-grid">
-        <Panel title="Activités récentes">
-          <div className="actor-list">
-            {["Paiement enregistré pour Marie Claire - 10 000 FCFA", "Nouveau membre ajouté : Paul Martin", "Réunion planifiée : Tontine Élévation", "Pénalité ajoutée pour retard de cotisation"].map((item, index) => (
-              <div className="actor-line" key={item}><div className="actor-line-main">ⓘ {item}</div><div className="actor-line-sub">Il y a {index + 1}h</div></div>
-            ))}
-          </div>
-        </Panel>
-        <Panel title="Répartition des cotisations"><Donut tone={tone} /></Panel>
-      </div>
+      <Panel title="Paiements récents">
+        {lastPayments.length === 0 ? (
+          <EmptyState>Aucun paiement enregistré.</EmptyState>
+        ) : (
+          <Table
+            columns={["Membre", "Montant", "Méthode", "Date", "Statut"]}
+            rows={lastPayments.map((p) => [
+              p.name || "—",
+              fmtCFA(p.amount),
+              p.method || "—",
+              fmtDate(p.date),
+              <StatusPill key={p.id} status={p.status} />,
+            ])}
+          />
+        )}
+      </Panel>
     </div>
   );
 }

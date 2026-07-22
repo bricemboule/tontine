@@ -36,16 +36,35 @@ const NAV_ALIASES = {
   reunions: "meetings",
 };
 
+const asArray = (setter) => (d) => setter(Array.isArray(d) ? d : []);
+
 function Home() {
   const { user } = useAuth();
   const api = useApi();
   const [dashboard, setDashboard] = useState(null);
+  const [cotisations, setCotisations] = useState([]);
+  const [meetings, setMeetings] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [receipts, setReceipts] = useState([]);
 
   useEffect(() => {
     api.getMemberDashboard().then(setDashboard).catch(() => {});
+    api.getCotisations().then(asArray(setCotisations)).catch(() => {});
+    api.getMeetings().then(asArray(setMeetings)).catch(() => {});
+    api.getNotifications().then(asArray(setNotifications)).catch(() => {});
+    api.getReceipts().then(asArray(setReceipts)).catch(() => {});
   }, [api]);
 
-  return <MemberHomeMock user={user} dashboard={dashboard} />;
+  return (
+    <MemberHomeMock
+      user={user}
+      dashboard={dashboard}
+      cotisations={cotisations}
+      meetings={meetings}
+      notifications={notifications}
+      receipts={receipts}
+    />
+  );
 }
 
 export default function MembreDashboard() {

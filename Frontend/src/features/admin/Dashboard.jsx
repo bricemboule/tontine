@@ -75,15 +75,19 @@ const NAV_ALIASES = {
   meetings: "reunions",
 };
 
-function AdminHome() {
+function AdminHome({ onNav }) {
   const api = useApi();
   const [dashboard, setDashboard] = useState(null);
+  const [members, setMembers] = useState([]);
+  const [payments, setPayments] = useState([]);
 
   useEffect(() => {
     api.getAdminDashboard().then(setDashboard).catch(() => {});
+    api.getMembers().then(setMembers).catch(() => {});
+    api.getPayments().then(setPayments).catch(() => {});
   }, [api]);
 
-  return <AdminHomeMock dashboard={dashboard} />;
+  return <AdminHomeMock dashboard={dashboard} members={members} payments={payments} onNav={onNav} />;
 }
 
 export default function AdminDashboard() {
@@ -114,8 +118,8 @@ export default function AdminDashboard() {
         onNav={id => navigate(id ? `/admin/${id}` : "/admin")}
         pageTitle={label} tontineName={user?.tontine_name}>
         <Routes>
-          <Route index element={<AdminHome />} />
-          <Route path="dashboard" element={<AdminHome />} />
+          <Route index element={<AdminHome onNav={id => navigate(id ? `/admin/${id}` : "/admin")} />} />
+          <Route path="dashboard" element={<AdminHome onNav={id => navigate(id ? `/admin/${id}` : "/admin")} />} />
 
           {/* Tontine courante */}
           <Route path="tontines" element={<TontineOverviewPage api={api} />} />

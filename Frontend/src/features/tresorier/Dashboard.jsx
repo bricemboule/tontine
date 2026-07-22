@@ -28,15 +28,29 @@ const NAV = [
   { id:"receipts",  label:"Reçus",            icon:"▧" },
 ];
 
+const asArray = (setter) => (d) => setter(Array.isArray(d) ? d : []);
+
 function Home() {
   const api = useApi();
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
+  const [payments, setPayments] = useState([]);
+  const [cotisations, setCotisations] = useState([]);
 
   useEffect(() => {
     api.getAdminDashboard().then(setDashboard).catch(() => {});
+    api.getPayments().then(asArray(setPayments)).catch(() => {});
+    api.getCotisations().then(asArray(setCotisations)).catch(() => {});
   }, [api]);
 
-  return <TresorierHomeMock dashboard={dashboard} />;
+  return (
+    <TresorierHomeMock
+      dashboard={dashboard}
+      payments={payments}
+      cotisations={cotisations}
+      onNav={(id) => navigate(id ? `/tresorier/${id}` : "/tresorier")}
+    />
+  );
 }
 
 export default function TresorierDashboard() {

@@ -35,15 +35,29 @@ const NAV = [
   { id:"tours",      label:"Tours",            icon:"↻" },
 ];
 
+const asArray = (setter) => (d) => setter(Array.isArray(d) ? d : []);
+
 function Home() {
   const api = useApi();
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
+  const [meetings, setMeetings] = useState([]);
+  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     api.getAdminDashboard().then(setDashboard).catch(() => {});
+    api.getMeetings().then(asArray(setMeetings)).catch(() => {});
+    api.getMembers().then(asArray(setMembers)).catch(() => {});
   }, [api]);
 
-  return <SecretaireHomeMock dashboard={dashboard} />;
+  return (
+    <SecretaireHomeMock
+      dashboard={dashboard}
+      meetings={meetings}
+      members={members}
+      onNav={(id) => navigate(id ? `/secretaire/${id}` : "/secretaire")}
+    />
+  );
 }
 
 export default function SecretaireDashboard() {

@@ -4,8 +4,44 @@ export function fmtCFA(value) {
   return `${new Intl.NumberFormat("fr-FR").format(Number(value || 0))} FCFA`;
 }
 
-// Marque unique : les blocs de dashboard ignorent le `tone` par rôle.
-const BRAND = "#7C3AED";
+export function fmtDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString("fr-FR");
+}
+
+const STATUS_META = {
+  active: ["Actif", ""],
+  paid: ["Payé", ""],
+  paye: ["Payé", ""],
+  validated: ["Validé", ""],
+  valide: ["Validé", ""],
+  confirmed: ["Confirmé", ""],
+  completed: ["Terminé", ""],
+  approved: ["Approuvé", ""],
+  pending: ["En attente", "warn"],
+  scheduled: ["Planifiée", "warn"],
+  upcoming: ["À venir", "warn"],
+  draft: ["Brouillon", "warn"],
+  partial: ["Partiel", "warn"],
+  late: ["En retard", "bad"],
+  overdue: ["En retard", "bad"],
+  rejected: ["Rejeté", "bad"],
+  excluded: ["Exclu", "bad"],
+  cancelled: ["Annulé", "bad"],
+  canceled: ["Annulé", "bad"],
+  suspended: ["Suspendu", "bad"],
+};
+
+export function StatusPill({ status, label }) {
+  const meta = STATUS_META[String(status || "").toLowerCase()];
+  const cls = meta ? meta[1] : "";
+  return <span className={`actor-status ${cls}`}>{label || (meta ? meta[0] : status || "—")}</span>;
+}
+
+export function EmptyState({ children = "Aucune donnée pour le moment." }) {
+  return <div className="actor-empty">{children}</div>;
+}
 
 /* Blocs partagés des tableaux de bord — branchés sur les tokens du
    design system (indigo unique, dark-ready). L'ancien paramètre `tone`
@@ -62,6 +98,7 @@ export const ACTOR_DASHBOARD_CSS = `
 .actor-input{width:100%;height:40px;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:0 11px;font-size:13px;color:var(--text)}
 .actor-submit{height:42px;border:0;border-radius:10px;background:var(--primary);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
 .actor-money{font-family:var(--font-display);font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.actor-empty{padding:26px 10px;text-align:center;color:var(--text-subtle);font-size:12.5px}
 @media(max-width:1120px){.actor-kpis,.actor-kpis.k6,.actor-grid,.actor-grid.equal{grid-template-columns:1fr}.actor-hero{flex-direction:column}.actor-search{width:100%}}
 `;
 
@@ -118,33 +155,3 @@ export function Table({ columns, rows }) {
   );
 }
 
-export function AreaChart() {
-  return (
-    <div className="actor-chart">
-      <svg viewBox="0 0 600 210" aria-hidden="true">
-        <defs>
-          <linearGradient id="actor-grad" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor={BRAND} stopOpacity=".32" />
-            <stop offset="100%" stopColor={BRAND} stopOpacity=".02" />
-          </linearGradient>
-        </defs>
-        {[40, 80, 120, 160].map(y => <line key={y} x1="0" x2="600" y1={y} y2={y} stroke="var(--border)" strokeDasharray="4 5" />)}
-        <path d="M10 170 C65 140, 88 122, 125 95 S195 125, 238 88 S310 68, 350 62 S425 36, 462 30 S530 95, 590 42 L590 200 L10 200 Z" fill="url(#actor-grad)" />
-        <path d="M10 170 C65 140, 88 122, 125 95 S195 125, 238 88 S310 68, 350 62 S425 36, 462 30 S530 95, 590 42" fill="none" stroke={BRAND} strokeWidth="4" strokeLinecap="round" />
-      </svg>
-    </div>
-  );
-}
-
-export function Donut() {
-  return (
-    <>
-      <div className="actor-donut" />
-      <div className="actor-legend">
-        <span><b>Encaissé</b><strong>62%</strong></span>
-        <span><b>En retard</b><strong>12%</strong></span>
-        <span><b>Partiel</b><strong>6%</strong></span>
-      </div>
-    </>
-  );
-}

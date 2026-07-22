@@ -35,15 +35,32 @@ const NAV = [
   { id:"reunions",   label:"Réunions",         icon:"⬡" },
 ];
 
+const asArray = (setter) => (d) => setter(Array.isArray(d) ? d : []);
+
 function Home() {
   const api = useApi();
+  const navigate = useNavigate();
   const [dashboard, setDashboard] = useState(null);
+  const [members, setMembers] = useState([]);
+  const [loans, setLoans] = useState([]);
+  const [meetings, setMeetings] = useState([]);
 
   useEffect(() => {
     api.getAdminDashboard().then(setDashboard).catch(() => {});
+    api.getMembers().then(asArray(setMembers)).catch(() => {});
+    api.getLoans().then(asArray(setLoans)).catch(() => {});
+    api.getMeetings().then(asArray(setMeetings)).catch(() => {});
   }, [api]);
 
-  return <PresidentHomeMock dashboard={dashboard} />;
+  return (
+    <PresidentHomeMock
+      dashboard={dashboard}
+      members={members}
+      loans={loans}
+      meetings={meetings}
+      onNav={(id) => navigate(id ? `/president/${id}` : "/president")}
+    />
+  );
 }
 
 export default function PresidentDashboard() {
