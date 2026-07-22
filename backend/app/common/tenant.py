@@ -9,7 +9,12 @@ from app.core.models import UserRole
 async def tenant_context(current_user: dict, db: AsyncSession) -> dict:
     schema = current_user.get("schema")
     if not schema:
-        raise HTTPException(403, "Aucune tontine associée à ce compte")
+        raise HTTPException(
+            403,
+            "Aucune tontine active dans votre session. Déconnectez-vous puis "
+            "reconnectez-vous. Si le problème persiste, demandez au superadmin "
+            "de vous affecter à une tontine.",
+        )
 
     row = (await db.execute(text("""
         SELECT tr.id AS tontine_id, tr.name AS tontine_name, tr.slug, tr.schema_name,
